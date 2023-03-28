@@ -111,7 +111,8 @@ app.use('/'+ api_version + '/api/registers/buy', buyRegistrsRouter); // Реги
 
 
 app.get('/', (request, response) => {
-    response.send(process.env.DB_HOST);
+response.send('The Backend server is started');
+//    response.send(process.env.DB_HOST);
 //    response.send('IPFS Provider is started')
 })
 
