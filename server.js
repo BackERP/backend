@@ -32,6 +32,8 @@ const orderStatesRouter = require('./src/routes/orderstates');
 const offerSpecificationRouter = require('./src/routes/offerspecification');
 const orderSpecificationRouter = require('./src/routes/orderspecification');
 const curreniesRouter = require('./src/routes/currenies');
+const paymentsRouter = require('./src/routes/payments');
+
 
 
 
@@ -106,6 +108,11 @@ app.use('/'+ api_version + '/api/order/specification', orderSpecificationRouter)
 
 app.use('/'+ api_version + '/api/registers/sale', saleRegistrsRouter); // Регистр продаж
 app.use('/'+ api_version + '/api/registers/buy', buyRegistrsRouter); // Регистр покупок
+
+app.use('/'+ api_version + '/api/payments', paymentsRouter); // Оплата на тильде
+
+
+
 
 
 
