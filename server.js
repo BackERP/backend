@@ -106,6 +106,8 @@ app.use('/'+ api_version + '/api/order/states', orderStatesRouter); // Сост�
 app.use('/'+ api_version + '/api/order/specification', orderSpecificationRouter); // Спецификация заказа на покупку
 
 
+
+
 app.use('/'+ api_version + '/api/registers/sale', saleRegistrsRouter); // Регистр продаж
 app.use('/'+ api_version + '/api/registers/buy', buyRegistrsRouter); // Регистр покупок
 

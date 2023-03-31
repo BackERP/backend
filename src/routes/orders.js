@@ -13,6 +13,8 @@ router.post('/update', authenticateJWT, ordersController.update);
 router.post('/remove', authenticateJWT, ordersController.remove);
 
 router.post('/createByRegistr', ordersController.createByRegistr);
+router.post('/createByTCart', ordersController.createByTCart);
+
 
 
 

@@ -7,6 +7,7 @@ import CPRPSaleRegistrs from './CPRPSaleRegistrs';
 import CPRPBuyDocumentSpecifications from './CPRPBuyDocumentSpecifications';
 import BuyDocumentStates from './enums/BuyDocumentStates';
 import { v4 as uuid } from 'uuid';
+import CPRPPayments from './CPRPPayments';
 
 
 
@@ -150,5 +151,9 @@ export default class CPRPBuyDocuments extends CPRPQuery
       }
     }
 
+    async createByTCart(cart)
+    {
+       return await CPRPPayments.paid(cart);
+    }
 //createByRegistr(req.account, {source_registr, quantity}))
 }

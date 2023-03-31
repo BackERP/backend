@@ -23,8 +23,12 @@ module.exports = {
   async createByRegistr(req, res){  // create item
     const {email, source_registr, quantity} = req.body;
     res.json(await (new CPRPBuyDocuments).createByRegistr({email, source_registr, quantity}));
-
   },
+  async createByTCart(req, res){  // create item
+    res.json(await (new CPRPBuyDocuments).createByTCart(req.body));
+  },
+
+
 
   async update(req, res){  // update item
     const { uuid, number, dateDoc, email, sum, currency, documentState} = req.body;
