@@ -4,4 +4,6 @@ files
 dist
 .idea
 .env
+.env.dev
+.env.prod
 init.cmd

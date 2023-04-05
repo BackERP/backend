@@ -23,7 +23,7 @@ export default class CPRPPersonAccountsQueries
                           },
                           {
                             model: PRPPersons
-                            ,attributes: ['uuid', 'first_name', 'middle_name', 'last_name', 'birth_date']
+                            ,attributes: ['uuid', 'first_name', 'middle_name', 'last_name', 'birth_date', 'age']
                             ,as: 'person_data'
                             ,required: true
                             ,include: [{

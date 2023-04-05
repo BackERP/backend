@@ -45,6 +45,7 @@ export default class CPRPPersons extends CPRPQuery
               const objItem = await PRPPersons.create({  first_name: obj.first_name,
                                                           middle_name:obj.middle_name,
                                                           last_name:obj.last_name,
+                                                          age:obj.age,
                                                           createAccount: account.uuid,
                                                           createdAt: new Date(),
                                                           updatedAt: new Date()
@@ -70,6 +71,7 @@ export default class CPRPPersons extends CPRPQuery
               const objItem = await PRPPersons.update({  first_name: obj.first_name,
                                                           middle_name:obj.middle_name,
                                                           last_name:obj.last_name,
+                                                          age:obj.age,
                                                           updatedAt: new Date()
                                                       }, 
                                                       {where: {uuid: obj.uuid}},

@@ -16,13 +16,13 @@ module.exports = {
 
   async create(req, res){  // create item
 
-    const { first_name, middle_name, last_name, birth_date} = req.body;
-    res.json(await (new CPRPPersons).create(req.account, {first_name, middle_name, last_name, birth_date}));
+    const { first_name, middle_name, last_name, birth_date, age} = req.body;
+    res.json(await (new CPRPPersons).create(req.account, {first_name, middle_name, last_name, birth_date, age}));
 
   },
   async update(req, res){  // update item
-    const { uuid, first_name, middle_name, last_name, birth_date} = req.body;
-    res.json(await (new CPRPPersons).update(req.account, {uuid, first_name, middle_name, last_name, birth_date}));
+    const { uuid, first_name, middle_name, last_name, birth_date, age} = req.body;
+    res.json(await (new CPRPPersons).update(req.account, {uuid, first_name, middle_name, last_name, birth_date, age}));
   },
   async remove(req, res){  // remove item
     const { uuid} = req.body;

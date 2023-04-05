@@ -8,7 +8,7 @@ export default class CPRPPersonsQueries
    static items()
    {
       return {
-               attributes: ['uuid', 'first_name', 'middle_name', 'last_name', 'birth_date'],
+               attributes: ['uuid', 'first_name', 'middle_name', 'last_name', 'birth_date', 'age'],
                 order: [
                          ['createdAt', 'DESC'], 
                        ], 
