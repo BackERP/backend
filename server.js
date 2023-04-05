@@ -56,8 +56,6 @@ const api_version = 'v.1.0.0';
 
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 
 
 
@@ -67,6 +65,8 @@ const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_PRIVATE_
 
 const app = express()
 const port = 3000
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 
 
 app.use(cors());
