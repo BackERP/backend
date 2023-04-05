@@ -15,13 +15,13 @@ module.exports = {
 
 
   async create(req, res){  // create item
-    const { name, subject_type } = req.body;
-    res.json(await (new CPRPSubjects).create(req.account, {name, subject_type}));
+    const { name, subject_type, show_main, order } = req.body;
+    res.json(await (new CPRPSubjects).create(req.account, {name, subject_type, show_main, order}));
 
   },
   async update(req, res){  // update item
-    const { uuid, name, subject_type} = req.body;
-    res.json(await (new CPRPSubjects).update(req.account, {uuid, name, subject_type}));
+    const { uuid, name, subject_type, show_main, order} = req.body;
+    res.json(await (new CPRPSubjects).update(req.account, {uuid, name, subject_type, show_main, order}));
   },
   async remove(req, res){  // remove item
     const { uuid} = req.body;

@@ -31,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
           },
     name: DataTypes.STRING,
     subject_type: DataTypes.STRING,
+    show_main: DataTypes.BOOLEAN,
+    order: DataTypes.INTEGER,
     createAccount: DataTypes.UUID,
     state: DataTypes.INTEGER
   }, {

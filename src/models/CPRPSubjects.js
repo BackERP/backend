@@ -45,6 +45,8 @@ export default class CPRPSubjects extends CPRPQuery
             const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
               const objItem = await PRPSubjects.create({  name: obj.name,
                                                           subject_type: obj.subject_type,
+                                                          show_main: obj.show_main,
+                                                          order: obj.order,
                                                           createAccount: account.uuid,
                                                           createdAt: new Date(),
                                                           updatedAt: new Date()
@@ -69,6 +71,8 @@ export default class CPRPSubjects extends CPRPQuery
     // your transactions
               const objItem = await PRPSubjects.update({  name: obj.name,
                                                           subject_type: obj.subject_type,
+                                                          show_main: obj.show_main,
+                                                          order: obj.order,
                                                           updatedAt: new Date()
                                                        }, 
                                                        {where: {uuid: obj.uuid}},
