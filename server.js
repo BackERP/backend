@@ -44,7 +44,7 @@ const paymentsRouter = require('./src/routes/payments');
 
 
 const path = require("path");
-app.use(express.limit('50M'));
+//app.use(express.limit('50M'));
                                            
 
 
