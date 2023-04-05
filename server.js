@@ -56,6 +56,8 @@ const api_version = 'v.1.0.0';
 
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 
 
 
