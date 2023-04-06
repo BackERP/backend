@@ -10,6 +10,7 @@ import CPRPSaleDocumentSpecifications from './CPRPSaleDocumentSpecifications';
 import { v4 as uuid } from 'uuid';
 import CPRPSaleRegistrs from './CPRPSaleRegistrs';
 import CPRPCommonHelper from '../helpers/CPRPCommonHelper';
+import CPRPSubjectAttributes from './CPRPSubjectAttributes';
 
 
 
@@ -21,6 +22,36 @@ const Sequelize = require('./db').Sequelize;
 const Op = Sequelize.Op;
 
 
+    const defaultLink = async (records)=>
+    {
+       const result  = (await (new CPRPAssetsResources()).getAllDefault());
+       if(!result.ok)
+          throw new Error(result.error);
+
+       const resources = result.data;
+
+      return records.map((doc)=>{
+         const resource = resources.find((r)=>r.asset_data.uuid == doc.asset_data.uuid);
+         if(resource === undefined)
+           return doc;
+         doc.link_address = (resource.link_address !== '')?resource.link_address:doc.link_address;
+         return doc;
+      }); 
+    }
+    const addSubjectAttribute = async (records)=>
+    {
+       const result  = (await (new CPRPSubjectAttributes()).all());
+       if(!result.ok)
+          throw new Error(result.error);
+
+       const attributes = result.data;
+       
+      return records.map((doc)=>{
+//         console.log('doc', doc);
+         doc.subject_data.attributes = attributes.filter((attr)=>attr.subject_data.uuid == doc.subject_data.uuid);
+         return doc;
+      }); 
+    }
 
 
 export default class CPRPSaleDocuments extends CPRPQuery
@@ -29,7 +60,6 @@ export default class CPRPSaleDocuments extends CPRPQuery
     {
       super();
     }
-
     async convertData(records)
     {
 
@@ -102,7 +132,7 @@ export default class CPRPSaleDocuments extends CPRPQuery
        if(doc !== null)
           newRecords.push(doc);
        
-       return newRecords;
+       return await defaultLink(await addSubjectAttribute(newRecords));
     }
 
     async get(uuid)

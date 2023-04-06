@@ -17,6 +17,7 @@ export default class CPRPSaleDocumentsQueries
                          ['createdAt', 'DESC'], 
                        ], 
                 raw: true,
+                nest: true,
                 include: [
                     {     
                        model: PRPCurrencies

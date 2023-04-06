@@ -47,6 +47,18 @@ export default class CPRPSubjectAttributes extends CPRPQuery
                         );
     }
 
+    async all(page, countItems)
+    {
+      return this.pagination(PRPSubjectAttributes
+                         ,CPRPQueryLib.subject_attributes.items()
+                         , {state: State.Active}
+                         , countItems
+                         , page
+                         ,this.convertData
+                        );
+    }
+
+
     async create(account, obj)
     {
       try{

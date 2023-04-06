@@ -58,6 +58,18 @@ export default class CPRPAssetsResources extends CPRPQuery
                          ,this.convertData
                         );
     }
+    async getAllDefault(page, countItems)
+    {
+      return this.pagination(PRPAssetsResources
+                         ,CPRPQueryLib.assets_resources.items()
+                         , {state: State.Active, default_item: true}
+                         , countItems
+                         , page
+                         ,this.convertData
+                        );
+    }
+
+
 
     async create(account, obj)
     {

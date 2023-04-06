@@ -7,6 +7,7 @@ import {countRecordsOnPage}  from '../config/config';
 
 
 
+
 const sequelize = require('./db').sequelize;
 const Sequelize = require('./db').Sequelize;
 const Op = Sequelize.Op;
