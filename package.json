@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@metamask/eth-sig-util": "^4.0.0",
     "@pinata/sdk": "^1.1.23",
     "@rarible/web3-ethereum": "^0.12.34",
     "@truffle/hdwallet-provider": "^1.4.2-hdwallet-signTypedMessage.0",
@@ -23,7 +22,6 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
-    "ethereumjs-util": "^7.1.2",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.4",
     "form-data": "^4.0.0",
@@ -37,8 +35,7 @@
     "node-fetch": "^2.6.9",
     "sequelize": "^6.6.5",
     "tslib": "^2.3.1",
-    "uuid": "^8.3.2",
-    "web3": "^1.7.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@rarible/sdk": "^0.8.29",
