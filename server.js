@@ -34,6 +34,45 @@ const orderSpecificationRouter = require('./src/routes/orderspecification');
 const curreniesRouter = require('./src/routes/currenies');
 const paymentsRouter = require('./src/routes/payments');
 
+const bookRecordsRouter = require('./src/routes/bookrecords');
+const documentSpecificationsRouter = require('./src/routes/documentspecifications');
+const documentsRouter = require('./src/routes/documents');
+const documentStatesRouter = require('./src/routes/documentstates');
+const typeDocumentsRouter = require('./src/routes/typedocuments');
+const booksRouter = require('./src/routes/books');
+
+
+const subjectContactsRouter = require('./src/routes/subjectcontacts');
+const documentContactsRouter = require('./src/routes/documentcontacts');
+const marketOffersRouter = require('./src/routes/marketoffers');
+const subjectTypeContactsRouter = require('./src/routes/subjecttypecontacts');
+const marketsMarketPlacesRouter = require('./src/routes/marketsmarketplaces');
+const marketsRouter = require('./src/routes/markets');
+const marketPlacesRouter = require('./src/routes/marketplaces');
+
+const localesRouter = require('./src/routes/locales');
+const languagesRouter = require('./src/routes/languages');
+const regionsRouter = require('./src/routes/regions');
+const countriesRouter = require('./src/routes/countries');
+const representationsRouter = require('./src/routes/representations');
+const viewAssetsRouter = require('./src/routes/viewassets');
+const viewPersonsRouter = require('./src/routes/viewpersons');
+const viewSubjectsRouter = require('./src/routes/viewsubjects');
+
+
+
+
+
+
+/*
+
+PRPLocale
+PRPLanguages
+PRPRegions
+PRPCountries
+
+*/
+
 
 
 
@@ -85,6 +124,8 @@ app.use('/'+ api_version + '/api/assetsmetadataproviders', assetsmetadataprovide
 
 app.use('/'+ api_version + '/api/subjecttypes', subjecttypesRouter); //Тип субъекта
 app.use('/'+ api_version + '/api/subjecttype/subjecttypeattributes', subjecttypeattributesRouter); //аттрибуты типа субъекта
+app.use('/'+ api_version + '/api/subjecttype/subjecttypecontacts', subjectTypeContactsRouter); //Типы контактов субъекта
+
 
 
 app.use('/'+ api_version + '/api/assets', assetsRouter); //актив
@@ -98,6 +139,9 @@ app.use('/'+ api_version + '/api/person/persondetails', persondetailsRouter); //
 app.use('/'+ api_version + '/api/subjects', subjectsRouter); //Субъект
 app.use('/'+ api_version + '/api/subject/subjectattributes', subjectattributesRouter); // Аттрибуты субъекта
 app.use('/'+ api_version + '/api/subject/subjectspecification', subjectspecificationRouter); //Спецификация субъекта
+app.use('/'+ api_version + '/api/subject/contacts', subjectContactsRouter); //Контактная информация с субъектом
+
+
 
 app.use('/'+ api_version + '/api/account/accountsubjects', accountsubjectsRouter); // Субъекты аккаунта
 app.use('/'+ api_version + '/api/typerelations', typerelationsRouter); // Типы отношений между субъектами
@@ -120,6 +164,30 @@ app.use('/'+ api_version + '/api/registers/buy', buyRegistrsRouter); // Реги
 
 app.use('/'+ api_version + '/api/payments', paymentsRouter); // Оплата на тильде
 
+
+
+app.use('/'+ api_version + '/api/books', booksRouter); // Книги
+app.use('/'+ api_version + '/api/typedocuments', typeDocumentsRouter); // Типы документов
+app.use('/'+ api_version + '/api/documents', documentsRouter); // Документы
+app.use('/'+ api_version + '/api/document/states', documentStatesRouter); // Состояния документов
+app.use('/'+ api_version + '/api/document/specifications', documentSpecificationsRouter); // Спецификация документа
+app.use('/'+ api_version + '/api/document/contacts', documentContactsRouter); // Контакты участников документа
+app.use('/'+ api_version + '/api/book/records', bookRecordsRouter); // Записи в книге
+
+app.use('/'+ api_version + '/api/marketplaces', marketPlacesRouter); // Маркетплейсы
+app.use('/'+ api_version + '/api/markets', marketsRouter); // Маркет
+app.use('/'+ api_version + '/api/market/marketplaces', marketsMarketPlacesRouter); // В каких маркетлейсах идет маркет
+app.use('/'+ api_version + '/api/market/offers', marketOffersRouter); // Какие сделаны предложения в данном маркете
+
+app.use('/'+ api_version + '/api/countries', countriesRouter); // Справочник стран
+app.use('/'+ api_version + '/api/languages', languagesRouter); // Справочник языков
+app.use('/'+ api_version + '/api/languages', regionsRouter); // Справочник регионов
+app.use('/'+ api_version + '/api/locales', localesRouter); // Справочник локаций
+
+app.use('/'+ api_version + '/api/representations', representationsRouter); // Представление данных
+app.use('/'+ api_version + '/api/representations/viewassets', viewAssetsRouter); // Представление assets
+app.use('/'+ api_version + '/api/representations/viewpersons', viewPersonsRouter); // Представление persons
+app.use('/'+ api_version + '/api/representations/viewsubjects', viewSubjectsRouter); // Представление subjects
 
 
 

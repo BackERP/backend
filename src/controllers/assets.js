@@ -12,6 +12,11 @@ module.exports = {
     const {page, countItems, asset} = req.query;
     res.json(await (new CPRPAssets).list(page, countItems));
   },
+  async person(req, res){  //get list
+    const {person} = req.query;
+    res.json(await (new CPRPAssets).person(person));
+  },
+
 
 
   async create(req, res){  // create item

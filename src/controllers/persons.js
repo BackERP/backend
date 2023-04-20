@@ -12,6 +12,11 @@ module.exports = {
     const {page, countItems} = req.query;
     res.json(await (new CPRPPersons).list(page, countItems));
   },
+  async representations(req, res){  //get list
+    const {subject} = req.query;
+    res.json(await (new CPRPPersons).representations(subject));
+  },
+
 
 
   async create(req, res){  // create item

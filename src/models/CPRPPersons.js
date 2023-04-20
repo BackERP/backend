@@ -38,6 +38,22 @@ export default class CPRPPersons extends CPRPQuery
                         );
     }
 
+    async representations(subject)
+    {
+      return this.pagination(PRPPersons
+                         ,CPRPQueryLib.persons.items()
+                         , { state: State.Active
+                            ,uuid: {
+                                     [Op.in]: Sequelize.literal("(select person from PRPSubjectSpecifications where subject='"+ subject + "')")//: {[Op.like]: '%A%'}
+                                   }
+
+                           }
+                         , undefined
+                         , -1
+                        );
+    }
+
+
     async create(account, obj)
     {
       try{

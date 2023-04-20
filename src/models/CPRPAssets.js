@@ -93,6 +93,22 @@ export default class CPRPAssets extends CPRPQuery
                         );
 
     }
+    async person(person)
+    {
+      return this.pagination(PRPAssets
+                         ,CPRPQueryLib.assets.items()
+                         , { state: State.Active
+                            ,subject_specification: {
+                                     [Op.in]: Sequelize.literal("(select uuid from PRPSubjectSpecifications where person='"+ person + "')")//: {[Op.like]: '%A%'}
+                                   }
+
+                           }
+                         , undefined
+                         , -1
+                        );
+
+    }
+
 
     async create(account, obj)
     {

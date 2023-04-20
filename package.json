@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r esm server.js"
+    "start": "node -r esm server.js",
+    "dev": "nodemon -r esm server.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "@pinata/sdk": "^1.1.23",
     "@rarible/web3-ethereum": "^0.12.34",
     "@truffle/hdwallet-provider": "^1.4.2-hdwallet-signTypedMessage.0",
+    "@vitalets/google-translate-api": "^9.1.0",
     "axios": "^0.21.4",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.19.0",
@@ -27,15 +29,19 @@
     "form-data": "^4.0.0",
     "formidable": "^1.2.2",
     "fs": "0.0.1-security",
+    "http-proxy-agent": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "modern-async": "^1.1.3",
+    "mongodb": "^4.15.0",
     "mysql2": "^2.3.0",
+    "node-fetch": "^2.6.9",
     "sequelize": "^6.6.5",
     "tslib": "^2.3.1",
     "uuid": "^8.3.2",
     "web3": "^1.7.0"
   },
   "devDependencies": {
-    "@rarible/sdk": "^0.8.29"
+    "@rarible/sdk": "^0.8.29",
+    "nodemon": "^2.0.22"
   }
 }

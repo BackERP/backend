@@ -128,6 +128,7 @@ export default class CPRPSaleDocumentSpecificationsQueries
                               },
                              ]
                   },
+
                   {     
                      model: PPRPAssetsProviders
                     ,attributes: ['uuid', 'name']

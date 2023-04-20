@@ -7,6 +7,7 @@ const getWayImage = 'https://cloudflare-ipfs.com'; //'https://gateway.pinata.clo
 const countRecordsOnPage = process.env.COUNT_RECORDS_ON_PAGE;
 const FILESTORAGEPATH = 'files/';
 const SERVER_URL = process.env.SERVER_URL;
+const MONGODB = process.env.MONGODB;
                                                                                                          
 
-export {accessTokenSecret, refreshTokenSecret, refreshTokens, getWayImage, countRecordsOnPage, FILESTORAGEPATH, SERVER_URL};
+export {accessTokenSecret, refreshTokenSecret, refreshTokens, getWayImage, countRecordsOnPage, FILESTORAGEPATH, SERVER_URL, MONGODB};

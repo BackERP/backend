@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      PRPBuyDocumentSpecifications.belongsTo(models.PRPAssetsResources, {
+      PRPBuyDocumentSpecifications.belongsTo(models.PRPBuyDocuments, {
         foreignKey: 'document',
         as: 'document_data'
       });

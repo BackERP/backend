@@ -24,6 +24,26 @@ import CPRPBuyDocumentsQueries from './queries/CPRPBuyDocumentsQueries';
 import CPRPBuyDocumentSpecificationsQueries from './queries/CPRPBuyDocumentSpecificationsQueries';
 import CPRPBuyRegistrsQueries from './queries/CPRPBuyRegistrsQueries';
 
+import CPRPBookRecordsQueries from './queries/CPRPBookRecordsQueries';
+import CPRPDocumentSpecificationsQueries from './queries/CPRPDocumentSpecificationsQueries';
+import CPRPDocumentsQueries from './queries/CPRPDocumentsQueries';
+import CPRPDocumentStatesQueries from './queries/CPRPDocumentStatesQueries';
+import CPRPTypeDocumentsQueries from './queries/CPRPTypeDocumentsQueries';
+import CPRPBooksQueries from './queries/CPRPBooksQueries';
+import CPRPSubjectContactsQueries from './queries/CPRPSubjectContactsQueries';
+import CPRPDocumentContactsQueries from './queries/CPRPDocumentContactsQueries';
+import CPRPMarketOffersQueries from './queries/CPRPMarketOffersQueries';
+import CPRPSubjectTypeContactsQueries from './queries/CPRPSubjectTypeContactsQueries';
+import CPRPMarketsMarketPlacesQueries from './queries/CPRPMarketsMarketPlacesQueries';
+import CPRPMarketsQueries from './queries/CPRPMarketsQueries';
+import CPRPMarketPlacesQueries from './queries/CPRPMarketPlacesQueries';
+import CPRPLocalesQueries from './queries/CPRPLocalesQueries';
+import CPRPLanguagesQueries from './queries/CPRPLanguagesQueries';
+import CPRPRegionsQueries from './queries/CPRPRegionsQueries';
+import CPRPCountriesQueries from './queries/CPRPCountriesQueries';
+
+
+
 
 
 
@@ -129,6 +149,76 @@ export default class CPRPQueryLib
    static get type_relations()
    {
      return CPRPTypeRelationsQueries;
+   }
+
+   static get books()
+   {
+     return CPRPBooksQueries;
+   }
+   static get type_documents()
+   {
+     return CPRPTypeDocumentsQueries;
+   }
+   static get document_states()
+   {
+     return CPRPDocumentStatesQueries;
+   }
+   static get documents()
+   {
+     return CPRPDocumentsQueries;
+   }
+   static get document_specifications()
+   {
+     return CPRPDocumentSpecificationsQueries;
+   }
+   static get book_records()
+   {
+     return CPRPBookRecordsQueries;
+   }
+
+   static get subject_contacts()
+   {
+     return CPRPSubjectContactsQueries;
+   }
+   static get document_contacts()
+   {
+     return CPRPDocumentContactsQueries;
+   }
+   static get market_offers()
+   {
+     return CPRPMarketOffersQueries;
+   }
+   static get subject_type_contacts()
+   {
+     return CPRPSubjectTypeContactsQueries;
+   }
+   static get market_marketplace()
+   {
+     return CPRPMarketsMarketPlacesQueries;
+   }
+   static get markets()
+   {
+     return CPRPMarketsQueries;
+   }
+   static get marketplaces()
+   {
+     return CPRPMarketPlacesQueries;
+   }
+   static get locales()
+   {
+     return CPRPLocalesQueries;
+   }
+   static get languages()
+   {
+     return CPRPLanguagesQueries;
+   }
+   static get regions()
+   {
+     return CPRPRegionsQueries;
+   }
+   static get countries()
+   {
+     return CPRPCountriesQueries;
    }
 
 
