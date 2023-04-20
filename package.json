@@ -13,8 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "@pinata/sdk": "^1.1.23",
-    "@rarible/web3-ethereum": "^0.12.34",
-    "@truffle/hdwallet-provider": "^1.4.2-hdwallet-signTypedMessage.0",
     "@vitalets/google-translate-api": "^9.1.0",
     "axios": "^0.21.4",
     "bcrypt": "^5.1.0",
