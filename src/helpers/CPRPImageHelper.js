@@ -23,7 +23,7 @@ export default class CPRPImageHelper
        const files = (await fs.promises.readdir(dir)).filter((filename)=>CPRPImageHelper.isImage(filename));
        for(let filename of files)
          await sharp(dir + '/' + filename)
-              .resize(300)
+              .resize(1000)
               .toFile(outdir + filename);
        
        return files;
@@ -38,7 +38,7 @@ export default class CPRPImageHelper
      if(!CPRPImageHelper.isImage(filename))
         return;
      return await sharp(dir + '/' + filename)
-                 .resize(300)
+                 .resize(1000)
                  .toFile(outdir + filename);
 
   }
