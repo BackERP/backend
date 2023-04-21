@@ -4,6 +4,10 @@ const fs = require("fs");
 import { v4 as uuid } from 'uuid';
 import {FILESTORAGEPATH, SERVER_URL} from '../config/config';
 import CPRPCommonHelper from '../helpers/CPRPCommonHelper';
+import CPRPImageHelper from '../helpers/CPRPImageHelper';
+
+
+
 
 
 
@@ -77,6 +81,7 @@ module.exports = {
   async uploadFile(req, res){
     const file = await getFilePath(req);
     const fileName = copyFile(file);
+    await CPRPImageHelper.minimize(fileName);
     res.json({ok:true, error:'', data:{filename:fileName, link_address:CPRPCommonHelper.pathLocal(fileName)}});
   },
 }

@@ -15,10 +15,15 @@ export default class CPRPCommonHelper
   {
      return SERVER_URL + '/' + FILESTORAGEPATH + resource;
   }
+  static pathMinLocal(resource)
+  {
+     return SERVER_URL + '/' + FILESTORAGEPATH + 'minimized/'+ resource;
+  }
+
   static pathByProvider(provider, resource)
   {
      return provider == 'PinataIPFS'? CPRPCommonHelper.pathIPFS(resource):
-            provider == 'Local'? CPRPCommonHelper.pathLocal(resource): 
+            provider == 'Local'? CPRPCommonHelper.pathMinLocal(resource): 
             provider == 'External link'? resource: '';
   }
   static async translate(text, lang)

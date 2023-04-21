@@ -58,7 +58,7 @@ const representationsRouter = require('./src/routes/representations');
 const viewAssetsRouter = require('./src/routes/viewassets');
 const viewPersonsRouter = require('./src/routes/viewpersons');
 const viewSubjectsRouter = require('./src/routes/viewsubjects');
-
+const helperRouter = require('./src/routes/helper');
 
 
 
@@ -188,6 +188,10 @@ app.use('/'+ api_version + '/api/representations', representationsRouter); // П
 app.use('/'+ api_version + '/api/representations/viewassets', viewAssetsRouter); // Представление assets
 app.use('/'+ api_version + '/api/representations/viewpersons', viewPersonsRouter); // Представление persons
 app.use('/'+ api_version + '/api/representations/viewsubjects', viewSubjectsRouter); // Представление subjects
+
+app.use('/'+ api_version + '/api/helper', helperRouter); // Вспомогательые функции
+
+
 
 
 
