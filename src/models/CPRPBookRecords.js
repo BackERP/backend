@@ -85,15 +85,6 @@ export default class CPRPBookRecords extends CPRPQuery
 
 
 
-    async moveRecords(book, sources, quantity)
-    {
-    }
-    async backRecords(sources, quantity)
-    {
-    }
-
-
-
     async get(uuid)
     {
       return this.request(PRPBookRecords
