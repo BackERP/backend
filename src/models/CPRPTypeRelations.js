@@ -39,6 +39,7 @@ export default class CPRPTypeRelations extends CPRPQuery
                         );
     }
 
+
     async create(account, obj)
     {
       try{

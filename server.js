@@ -59,6 +59,8 @@ const viewAssetsRouter = require('./src/routes/viewassets');
 const viewPersonsRouter = require('./src/routes/viewpersons');
 const viewSubjectsRouter = require('./src/routes/viewsubjects');
 const helperRouter = require('./src/routes/helper');
+const operationsRouter = require('./src/routes/operations');
+
 
 
 
@@ -190,6 +192,12 @@ app.use('/'+ api_version + '/api/representations/viewpersons', viewPersonsRouter
 app.use('/'+ api_version + '/api/representations/viewsubjects', viewSubjectsRouter); // Представление subjects
 
 app.use('/'+ api_version + '/api/helper', helperRouter); // Вспомогательые функции
+
+app.use('/'+ api_version + '/api/operations', operationsRouter); // Операции
+
+
+
+
 
 
 

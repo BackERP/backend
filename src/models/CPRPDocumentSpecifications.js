@@ -1,12 +1,13 @@
 
 const PRPDocumentSpecifications = require('./db').PRPDocumentSpecifications;
+import { map } from 'modern-async'
 
 
 import {State} from './enums/State';
 import CPRPQuery from './CPRPQuery';
 import CPRPQueryLib from './CPRPQueryLib';
 import {countRecordsOnPage}  from '../config/config';
-
+import CPRPBookRecords from './CPRPBookRecords';
 
 
 
@@ -40,85 +41,64 @@ export default class CPRPDocumentSpecifications extends CPRPQuery
                          , page
                         );
     }
-
-    async create(account, obj)
+    async listData(document)
     {
-      try{
-            const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-              const objItem = await PRPDocumentSpecifications.create({ document: obj.document,
-                                                                       asset: obj.asset,
-                                                                       asset_resource: obj.asset_resource,
-                                                                       asset_metadata_resource: obj.asset_metadata_resource,
-                                                                       quantity: obj.quantity,
-                                                                       price: obj.price,
-                                                                       sum: obj.sum,
-                                                                       currency: obj.currency,
-                                                                       source_record: obj.source_record,
-                                                                       control_record: obj.control_record,
-                                                                       createdAt: new Date(),
-                                                                       updatedAt: new Date()
-                                                                      }, { transaction: t });
-
-              return objItem;                                      
-           });
-           return {ok:true, data: {uuid: data.uuid, first_name: data.first_name, middle_name: data.middle_name, last_name: data.last_name}}
-        }
-        catch(err) {
-            return {ok:false, error:err.message, data: null};
-      }
+      return this.requestData(PRPDocumentSpecifications
+                         ,CPRPQueryLib.document_specifications.items()
+                         , {state: State.Active, document: document}
+                        );
     }
-    async update(account, obj)
+
+    async getBySpec(spec)
     {
-      try{
-           const asset = await PRPDocumentSpecifications.findOne({ where: { uuid: obj.uuid } });
-           if(asset === null)
-              return {ok:false, error:'The position of specification is not found', data:null};
+      return this.requestData(PRPDocumentSpecifications
+                         ,CPRPQueryLib.document_specifications.items()
+                         ,{uuid: {
+                                     [Op.in]: spec//: {[Op.like]: '%A%'}
+                                 }
+                          }
+                        );
 
-            const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-    // your transactions
-              const objItem = await PRPDocumentSpecifications.update({ document: obj.document,
-                                                                       asset: obj.asset,
-                                                                       asset_resource: obj.asset_resource,
-                                                                       asset_metadata_resource: obj.asset_metadata_resource,
-                                                                       quantity: obj.quantity,
-                                                                       price: obj.price,
-                                                                       sum: obj.sum,
-                                                                       currency: obj.currency,
-                                                                       source_record: obj.source_record,
-                                                                       control_record: obj.control_record,
-                                                                       updatedAt: new Date()
-                                                                    }, 
-                                                                    {where: {uuid: obj.uuid}},
-                                                                    { transaction: t });
-
-              return objItem;                                      
-           });
-           return {ok:true, data: {uuid: data.uuid, first_name: data.first_name, middle_name: data.middle_name, last_name: data.last_name}}
-        }
-        catch(err) {
-            return {ok:false, error:err.message, data: null};
-      }
     }
-    async remove(account, obj)
+    async createTrn(t, account, obj)
     {
-      try{
-           const asset = await PRPDocumentSpecifications.findOne({ where: { uuid: obj.uuid } });
-           if(asset === null)
-              return {ok:false, error:'The position of specification is not found', data:null};
-
-            const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-    // your transactions
-              const objItem = await PRPDocumentSpecifications.update({  state: State.Removed,
-                                                                        updatedAt: new Date()
-                                                                     }, 
-                                                                     {where: {uuid: obj.uuid}},
-                                                                     { transaction: t });
-              return objItem;                                      
-           });
-           return {ok:true, data: null}
-        }
-        catch(err) {
-            return {ok:false, error:err.message, data: null};
-      }
+      return await PRPDocumentSpecifications.create({ document: obj.document,
+                                                      asset: obj.asset,
+                                                      asset_resource: obj.asset_resource,
+                                                      asset_metadata_resource: obj.asset_metadata_resource,
+                                                      quantity: obj.quantity,
+                                                      price: obj.price,
+                                                      sum: obj.sum,
+                                                      currency: obj.currency,
+                                                      source_record: obj.source_record,
+                                                      control_record: obj.control_record,
+                                                      createdAt: new Date(),
+                                                      updatedAt: new Date()
+                                                     }, { transaction: t });
     }
+
+
+     async createBySpecTrn(t, type, document, subject, subject_specification, isRegist, spec, account)
+     {
+         return await map(objSpecInfoItems, async (itemSpc)=>{
+            const objSpc = await this.createTrn(t, account, { document: document,
+                                                              asset: obj.asset,
+                                                              asset_resource: obj.asset_resource,
+                                                              asset_metadata_resource: obj.asset_metadata_resource,
+                                                              quantity: obj.quantity,
+                                                              price: obj.price,
+                                                              sum: obj.quantity*obj.price,
+                                                              currency: obj.currency,
+                                                              source_record: obj.source_record,
+                                                              control_record: obj.control_record,
+                                                           }
+                                              );
+            if(isRegist)
+               await (new CPRPBookRecords).createBySpecTrn(t, type, document, subject, subject_specification, objSpc.uuid, itemSpc, account);
+
+            return objSpc;
+         });
+     }
+
+
 }

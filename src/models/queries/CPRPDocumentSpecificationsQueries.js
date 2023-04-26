@@ -77,7 +77,7 @@ export default class CPRPDocumentSpecificationsQueries
                                ,required: true
                                ,include: [{
                                             model: PRPSubjects
-                                           ,attributes: ['uuid', 'name']
+                                           ,attributes: ['uuid', 'name', 'inner_name']
                                            ,as: 'subject_data'
                                            ,required: true
                                            ,include: [{
@@ -95,7 +95,7 @@ export default class CPRPDocumentSpecificationsQueries
                                           },
                                           {
                                             model: PRPSubjects
-                                           ,attributes: ['uuid', 'name']
+                                           ,attributes: ['uuid', 'name', 'inner_name']
                                            ,as: 'subsubject_data'
                                            ,required: false
                                            ,include: [{
@@ -139,7 +139,7 @@ export default class CPRPDocumentSpecificationsQueries
                               },
                               {     
                                 model: PRPSubjects
-                               ,attributes: ['uuid', 'name']
+                               ,attributes: ['uuid', 'name', 'inner_name']
                                ,as: 'subject_data'
                                ,required: true
                                ,include: [{

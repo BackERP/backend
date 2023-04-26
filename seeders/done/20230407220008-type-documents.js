@@ -1,6 +1,6 @@
 'use strict';
 
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

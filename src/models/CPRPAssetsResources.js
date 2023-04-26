@@ -1,5 +1,6 @@
 const PRPAssetsResources = require('./db').PRPAssetsResources;
 import {State} from './enums/State';
+import {AssetProviders} from './enums/AssetProviders';
 import CPRPQuery from './CPRPQuery';
 import CPRPQueryLib from './CPRPQueryLib';
 import {countRecordsOnPage}  from '../config/config';
@@ -69,6 +70,44 @@ export default class CPRPAssetsResources extends CPRPQuery
                         );
     }
 
+    async getData(uuid)
+    {
+      return this.requestData(PRPAssetsResources
+                         ,CPRPQueryLib.assets_resources.items()
+                         , {uuid: uuid}
+                        );
+    }
+
+    async listDataByProvider(provider)
+    {
+      return this.requestData(PRPAssetsResources
+                         ,CPRPQueryLib.assets_resources.items()
+                         , {state: State.Active, provider: provider}
+                        );
+    }
+    async listDataByPinataIPFS()
+    {
+       return this.listDataByProvider(AssetProviders.PinataIPFS);
+    }
+    async listDataByPhysically()
+    {
+       return this.listDataByProvider(AssetProviders.Physically);
+    }
+    async listDataByAssetProvider(asset, provider)
+    {
+      return this.requestData(PRPAssetsResources
+                         ,CPRPQueryLib.assets_resources.items()
+                         , {state: State.Active, asset:asset, provider: provider}
+                        );
+    }
+    async resourcePinataIPFS(asset)
+    {
+       return this.listDataByAssetProvider(asset, AssetProviders.PinataIPFS)
+    }
+    async resourcePhysically(asset)
+    {
+       return this.listDataByAssetProvider(asset, AssetProviders.Physically)
+    }
 
 
     async create(account, obj)

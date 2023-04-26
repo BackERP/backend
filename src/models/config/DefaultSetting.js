@@ -16,6 +16,11 @@ export default class DefaultSetting
     {
        return '0a3238cc-0177-4f4c-b2a4-3459475aea45';
     }
+    static get subject()
+    {
+       return '595e4e89-8877-444a-bb40-32d3dc3ee9ea';
+    }
+
 
 
 

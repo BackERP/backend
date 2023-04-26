@@ -13,5 +13,4 @@ router.post('/update', authenticateJWT, marketOffersController.update);
 router.post('/remove', authenticateJWT, marketOffersController.remove);
 
 
-
 module.exports = router;

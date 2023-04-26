@@ -60,16 +60,28 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       PRPBookRecords.belongsTo(models.PRPBookRecords, {
-        foreignKey: 'base_record',
+        foreignKey: 'base_record',  //основание для перемещения, например в issue, основанием являеся карточка paid
         as: 'base_record_data'
       });
+      PRPBookRecords.belongsTo(models.PRPBookRecords, {
+        foreignKey: 'source_record',   //Карточка источник
+        as: 'source_record_data'
+      });
+
+
       PRPBookRecords.belongsTo(models.PRPDocumentSpecifications, {
         foreignKey: 'issue_record',
         as: 'issue_record_data'   //Ссылка на спецификацию выпуска, не запись в книге, а основание регистрации этой записи
       });
+
       PRPBookRecords.belongsTo(models.PRPDocumentSpecifications, {
+        foreignKey: 'control_record',
+        as: 'control_record_data'  //Ссылка на спецификацию управляющей записи, не запись в книге, а основание регистрации этой записи
+      });
+
+      PRPBookRecords.belongsTo(models.PRPBookRecords, {
         foreignKey: 'master_record',
-        as: 'master_record_data'  //Ссылка на спецификацию управляющей записи, не запись в книге, а основание регистрации этой записи
+        as: 'master_record_data'  //ссылка на запись в книге, которая изменяет конртоль
       });
     }
   }
@@ -95,8 +107,10 @@ module.exports = (sequelize, DataTypes) => {
     reg_document: DataTypes.UUID,
     reg_specification: DataTypes.UUID,
     base_record: DataTypes.UUID,
+    source_record: DataTypes.UUID,
     issue_record: DataTypes.UUID,
     master_record: DataTypes.UUID,
+    control_record: DataTypes.UUID,
     state: DataTypes.INTEGER
   }, {
     sequelize,

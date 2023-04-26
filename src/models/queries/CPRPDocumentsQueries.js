@@ -36,7 +36,7 @@ export default class CPRPDocumentsQueries
                             ,required: true
                             ,include: [{
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subject_data'
                               ,required: true
                               ,include: [{
@@ -54,7 +54,7 @@ export default class CPRPDocumentsQueries
                             },
                             {
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subsubject_data'
                               ,required: false
                               ,include: [{
@@ -101,7 +101,7 @@ export default class CPRPDocumentsQueries
                           },
                           {
                             model: PRPSubjects
-                            ,attributes: ['uuid', 'name']
+                            ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'subject_data'
                             ,required: true
                             ,include: [{
@@ -126,7 +126,7 @@ export default class CPRPDocumentsQueries
                             ,required: false
                             ,include: [{
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subject_data'
                               ,required: true
                               ,include: [{
@@ -144,7 +144,7 @@ export default class CPRPDocumentsQueries
                             },
                             {
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subsubject_data'
                               ,required: false
                               ,include: [{
@@ -191,7 +191,7 @@ export default class CPRPDocumentsQueries
                           },
                           {
                             model: PRPSubjects
-                            ,attributes: ['uuid', 'name']
+                            ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'from_subject_data'
                             ,required: false
                             ,include: [{
@@ -216,7 +216,7 @@ export default class CPRPDocumentsQueries
                             ,required: false
                             ,include: [{
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subject_data'
                               ,required: true
                               ,include: [{
@@ -234,7 +234,7 @@ export default class CPRPDocumentsQueries
                             },
                             {
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subsubject_data'
                               ,required: false
                               ,include: [{
@@ -281,7 +281,7 @@ export default class CPRPDocumentsQueries
                           },
                           {
                             model: PRPSubjects
-                            ,attributes: ['uuid', 'name']
+                            ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'to_subject_data'
                             ,required: false
                             ,include: [{

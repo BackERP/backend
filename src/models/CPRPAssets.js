@@ -83,6 +83,15 @@ export default class CPRPAssets extends CPRPQuery
                         );
 
     }
+    async getData(uuid)
+    {
+      return this.requestData(PRPAssets
+                         ,CPRPQueryLib.assets.items()
+                         ,{uuid: uuid}
+                        );
+
+    }
+
     async list(page, countItems)
     {
       return this.pagination(PRPAssets

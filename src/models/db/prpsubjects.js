@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey:true
           },
     name: DataTypes.STRING,
+    inner_name: DataTypes.STRING,
     subject_type: DataTypes.STRING,
     show_main: DataTypes.BOOLEAN,
     order: DataTypes.INTEGER,

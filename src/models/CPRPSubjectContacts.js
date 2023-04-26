@@ -1,9 +1,10 @@
 const PRPSubjectContacts = require('./db').PRPSubjectContacts;
+import { map } from 'modern-async'
+
 import {State} from './enums/State';
 import CPRPQuery from './CPRPQuery';
 import CPRPQueryLib from './CPRPQueryLib';
 import {countRecordsOnPage}  from '../config/config';
-
 
 
 
@@ -17,7 +18,7 @@ const Op = Sequelize.Op;
 export default class CPRPSubjectContacts extends CPRPQuery
 {
     constructor()
-    {
+    {                            
       super();
     }
     async get(uuid)
@@ -37,19 +38,39 @@ export default class CPRPSubjectContacts extends CPRPQuery
                          , page
                         );
     }
+    async findData(subject, type, contact)
+    {
+      return this.requestData(PRPSubjectContacts
+                         ,CPRPQueryLib.subject_contacts.items()
+                         ,{state: State.Active, subject, type, contact}
+                        );
+
+    }
+
+    async createIsNotExistTrn(t, account, subject, contacts)
+    {
+        return await map(contacts, async (contact)=>{
+          const data = await this.findData(subject, contact.type, contact.contact);
+          if(data.length == 0)
+            return await this.createTrn(t, account, {subject, type:contact.type, contact: contact.contact})
+        });
+    }
+
+    async createTrn(t, account, obj)
+    {
+        return await PRPSubjectContacts.create({  subject: obj.subject,
+                                                  type:obj.type,
+                                                  contact:obj.contact,
+                                                  createdAt: new Date(),
+                                                  updatedAt: new Date()
+                                                }, { transaction: t });
+    }
 
     async create(account, obj)
     {
       try{
             const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-              const objItem = await PRPSubjectContacts.create({  subject: obj.subject,
-                                                                 type:obj.type,
-                                                                 contact:obj.contact,
-                                                                 createdAt: new Date(),
-                                                                 updatedAt: new Date()
-                                                               }, { transaction: t });
-
-              return objItem;                                      
+              return await this.createTrn(t, account, obj);                                      
            });
            return {ok:true, data: {uuid: data.uuid}}
         }

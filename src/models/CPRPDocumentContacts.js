@@ -3,6 +3,8 @@ import {State} from './enums/State';
 import CPRPQuery from './CPRPQuery';
 import CPRPQueryLib from './CPRPQueryLib';
 import {countRecordsOnPage}  from '../config/config';
+import { map } from 'modern-async'
+
 
 
 
@@ -37,21 +39,44 @@ export default class CPRPDocumentContacts extends CPRPQuery
                          , page
                         );
     }
+    async listData(document)
+    {
+      return this.requestData(PRPDocumentContacts
+                         ,CPRPQueryLib.document_contacts.items()
+                         , {state: State.Active, document: document}
+                        );
+    }
+
+    async addToDocTrn(t, account, document, subject, subject_specification, contacts)
+    {
+       return await map(contacts, async (contact)=>{
+         return await this.createTrn(t, account, {document: document,
+                                                 subject:subject,
+                                                 subject_specification:subject_specification,
+                                                 type:contact.type,
+                                                 contact:contact.contact
+         });
+       });
+    }
+
+    async createTrn(t, account, obj)
+    {
+       return await PRPDocumentContacts.create({ document: obj.document,
+                                                 subject:obj.subject,
+                                                 subject_specification:obj.subject_specification,
+                                                 type:obj.type,
+                                                 contact:obj.contact,
+                                                 createdAt: new Date(),
+                                                 updatedAt: new Date()
+                                               }, { transaction: t });
+    }
 
     async create(account, obj)
     {
       try{
             const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-              const objItem = await PRPDocumentContacts.create({ document: obj.document,
-                                                                 subject:obj.subject,
-                                                                 subject_specification:obj.subject_specification,
-                                                                 type:obj.type,
-                                                                 contact:obj.contact,
-                                                                 createdAt: new Date(),
-                                                                 updatedAt: new Date()
-                                                              }, { transaction: t });
 
-              return objItem;                                      
+              return await this.createTrn(t, account, obj);                                      
            });
            return {ok:true, data: {uuid: data.uuid}}
         }

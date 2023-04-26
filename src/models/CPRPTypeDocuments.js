@@ -29,6 +29,15 @@ export default class CPRPTypeDocuments extends CPRPQuery
                         );
 
     }
+    async getData(uuid)
+    {
+      return this.requestData(PRPTypeDocuments
+                         ,CPRPQueryLib.type_documents.items()
+                         ,{uuid: uuid}
+                        );
+
+    }
+
     async list(page, countItems)
     {
       return this.pagination(PRPTypeDocuments

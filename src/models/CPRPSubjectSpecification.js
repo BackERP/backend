@@ -37,19 +37,40 @@ export default class CPRPSubjectSpecification extends CPRPQuery
                          , page
                         );
     }
+    async findData(relation, subject, subsubject)
+    {
+      return this.requestData(PRPSubjectSpecification
+                         ,CPRPQueryLib.subject_specification.items()
+                         ,{state: State.Active, relation, subject, subsubject}
+                        );
+
+    }
+
+    async createIsNotExistTrn(t, account, relation, subject, subsubject)
+    {
+       const subject_specifications = await this.findData(relation, subject, subsubject);
+       if(subject_specifications.length > 0)
+         return;
+       return await createTrn(t, account, {relation, subject, subsubject});
+    }
+    async createTrn(t, account, obj)
+    {
+         return await PRPSubjectSpecification.create({  subject: obj.subject,
+                                                        subsubject: obj.subsubject,
+                                                        person: obj.person,
+                                                        relation: obj.relation,
+                                                        description: obj.description,
+                                                        createAccount: account.uuid,
+                                                        createdAt: new Date(),
+                                                        updatedAt: new Date()
+                                                      }, { transaction: t });
+    }
+
     async create(account, obj)
     {
       try{
             const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-              const objItem = await PRPSubjectSpecification.create({  subject: obj.subject,
-                                                                      subsubject: obj.subsubject,
-                                                                      person: obj.person,
-                                                                      relation: obj.relation,
-                                                                      description: obj.description,
-                                                                      createAccount: account.uuid,
-                                                                      createdAt: new Date(),
-                                                                      updatedAt: new Date()
-                                                                   }, { transaction: t });
+              const objItem = await this.createTrn(t, account, obj);
 
               return objItem;                                      
            });

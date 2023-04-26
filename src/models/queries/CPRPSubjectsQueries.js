@@ -13,7 +13,7 @@ export default class CPRPSubjectsQueries
    static items()
    {
       return {
-               attributes: ['uuid', 'name', 'show_main', 'order'],
+               attributes: ['uuid', 'name', 'show_main', 'order', 'inner_name'],
                 order: [
                          ['createdAt', 'DESC'], 
                        ], 

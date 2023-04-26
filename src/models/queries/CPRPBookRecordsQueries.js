@@ -44,7 +44,7 @@ export default class CPRPBookRecordsQueries
                             ,required: true
                             ,include: [{
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subject_data'
                               ,required: true
                               ,include: [{
@@ -62,7 +62,7 @@ export default class CPRPBookRecordsQueries
                             },
                             {
                                model: PRPSubjects
-                              ,attributes: ['uuid', 'name']
+                              ,attributes: ['uuid', 'name', 'inner_name']
                               ,as: 'subsubject_data'
                               ,required: false
                               ,include: [{
@@ -109,7 +109,7 @@ export default class CPRPBookRecordsQueries
                           },
                           {
                             model: PRPSubjects
-                            ,attributes: ['uuid', 'name']
+                            ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'subject_data'
                             ,required: true
                             ,include: [{
@@ -172,7 +172,7 @@ export default class CPRPBookRecordsQueries
                                ,required: true
                                ,include: [{
                                             model: PRPSubjects
-                                           ,attributes: ['uuid', 'name']
+                                           ,attributes: ['uuid', 'name', 'inner_name']
                                            ,as: 'subject_data'
                                            ,required: true
                                            ,include: [{
@@ -190,7 +190,7 @@ export default class CPRPBookRecordsQueries
                                           },
                                           {
                                             model: PRPSubjects
-                                           ,attributes: ['uuid', 'name']
+                                           ,attributes: ['uuid', 'name', 'inner_name']
                                            ,as: 'subsubject_data'
                                            ,required: false
                                            ,include: [{
@@ -234,7 +234,7 @@ export default class CPRPBookRecordsQueries
                               },
                               {     
                                 model: PRPSubjects
-                               ,attributes: ['uuid', 'name']
+                               ,attributes: ['uuid', 'name', 'inner_name']
                                ,as: 'subject_data'
                                ,required: true
                                ,include: [{
@@ -301,7 +301,34 @@ export default class CPRPBookRecordsQueries
                           {     
                              model: PRPBookRecords
                             ,attributes: ['uuid', 'reg_number', 'dateReg', 'price', 'quantity', 'sum']
-                            ,as: 'base_record_data_data'
+                            ,as: 'base_record_data'
+                            ,required: false
+                            ,include: [{
+                               model: PRPBooks
+                              ,attributes: ['uuid', 'name']
+                              ,as: 'book_data'
+                              ,required: true
+                             }
+                            ]
+                          },
+                          {     
+                             model: PRPBookRecords
+                            ,attributes: ['uuid', 'reg_number', 'dateReg', 'price', 'quantity', 'sum']
+                            ,as: 'source_record_data'
+                            ,required: false
+                            ,include: [{
+                               model: PRPBooks
+                              ,attributes: ['uuid', 'name']
+                              ,as: 'book_data'
+                              ,required: true
+                             }
+                            ]
+                          },
+
+                          {     
+                             model: PRPBookRecords
+                            ,attributes: ['uuid', 'reg_number', 'dateReg', 'price', 'quantity', 'sum']
+                            ,as: 'master_record_data'
                             ,required: false
                             ,include: [{
                                model: PRPBooks
@@ -320,7 +347,7 @@ export default class CPRPBookRecordsQueries
                           {     
                              model: PRPDocumentSpecifications
                             ,attributes: ['uuid', 'quantity', 'price', 'sum']
-                            ,as: 'master_record_data'
+                            ,as: 'control_record_data'
                             ,required: false
                           },
 

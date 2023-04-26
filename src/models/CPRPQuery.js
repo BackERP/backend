@@ -81,5 +81,11 @@ export default class CPRPQuery
         return {ok:false, error: e.message, data:null};
      }
   }
-
+  async requestData(obj, query,  where, onSuccess = null, data = null) 
+  {
+     const request = await this.request(obj, query,  where, onSuccess, data);
+     if(!request.ok)
+        return [];
+     return request.data;
+  }
 }

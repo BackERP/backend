@@ -35,7 +35,7 @@ export default class CPRPSubjectAttributesQueries
                           },
                           {
                             model: PRPSubjects
-                            ,attributes: ['uuid', 'name']
+                            ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'subject_data'
                             ,required: true
                             ,include: [{
