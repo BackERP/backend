@@ -88,4 +88,13 @@ export default class CPRPQuery
         return [];
      return request.data;
   }
+  returnData(data)
+  {
+     return {ok:true, error: '', data:data};
+  }
+  returnError(error)
+  {
+     return {ok:false, error: error, data:null};
+  }
+
 }

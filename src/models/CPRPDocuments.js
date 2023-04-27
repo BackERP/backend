@@ -97,7 +97,7 @@ export default class CPRPDocuments extends CPRPQuery
 
               const objDoc = await this.createTrn(t, account, documentObject);
               if(market !== undefined)
-                 await (new CPRPMarketOffers).setOffer(account, market, objDoc.uuid);
+                 await (new CPRPMarketOffers).setOfferTrn(t, account, market, objDoc.uuid, spec[0].asset);
 
               if(contacts)          
                 await (new CPRPDocumentContacts).addToDocTrn(t, account, 

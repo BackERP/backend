@@ -46,6 +46,8 @@ export default class CPRPSubjectSpecification extends CPRPQuery
 
     }
 
+
+
     async createIsNotExistTrn(t, account, relation, subject, subsubject)
     {
        const subject_specifications = await this.findData(relation, subject, subsubject);

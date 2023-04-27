@@ -1,5 +1,6 @@
 const PRPMarketOffers = require('./db').PRPMarketOffers;
 import {State} from './enums/State';
+import {TypeDocuments} from './enums/TypeDocuments';
 import {StateMarketOffer} from './enums/StateMarketOffer';
 import CPRPQuery from './CPRPQuery';
 import CPRPQueryLib from './CPRPQueryLib';
@@ -39,6 +40,7 @@ export default class CPRPMarketOffers extends CPRPQuery
                          , page
                         );
     }
+
     async findData(market, offer)
     {
       return this.requestData(PRPMarketOffers
@@ -47,25 +49,40 @@ export default class CPRPMarketOffers extends CPRPQuery
                         );
 
     }
-
-
-    async setOffer(account, market, offer)
+    async findByAssetData(market, asset)
     {
-       const marketoffers = await this.findData(market, offer);
+       const sqlOffer = "(select document from PRPDocumentSpecifications"
+                       + " inner join PRPDocuments on PRPDocuments.uuid = PRPDocumentSpecifications.document "
+                       + " and PRPDocuments.type = '" + TypeDocuments.offer + "' "
+                       + " where asset='"+ asset + "')";
+
+      return this.requestData(PRPMarketOffers
+                         ,CPRPQueryLib.market_offers.items()
+                         ,{state: State.Active, 
+                           market,
+ 
+                           offer: {
+                                     [Op.in]: Sequelize.literal(sqlOffer)
+                                   }, 
+                           stateMarket: StateMarketOffer.Active}
+                        );
+
+    }
+
+
+
+
+    async setOfferTrn(t, account, market, offer, asset)
+    {
+       const marketoffers = await this.findByAssetData(market, asset);
        let source_offer;
        if(marketoffers.length > 0)
        {
           const marketoffer = marketoffers[0];
           source_offer = marketoffer.offer_data.uuid;
-
-          await this.updateTrn(t, account, { uuid: marketoffer.uuid,
-                                             market: marketoffer.market_data.uuid,
-                                             offer: marketoffer.offer_data.uuid,
-                                             source_offer:marketoffer.source_offer.uuid,
-                                             order:marketoffer.order,
-                                             stateMarket:StateMarketOffer.Cancel,
-          });
+          await this.cancelTrn(t, account, marketoffer.uuid);
        }
+
        return  await this.createTrn(t, account, { market: market,
                                                   offer: offer,
                                                   source_offer:source_offer,
@@ -112,6 +129,15 @@ export default class CPRPMarketOffers extends CPRPQuery
                                            {where: {uuid: obj.uuid}},
                                            { transaction: t });
     }
+    async cancelTrn(t, account, uuid)
+    {
+       return await PRPMarketOffers.update({ stateMarket: StateMarketOffer.Cancel,
+                                             updatedAt: new Date()
+                                           }, 
+                                           {where: {uuid: uuid}},
+                                           { transaction: t });
+    }
+
 
     async update(account, obj)
     {

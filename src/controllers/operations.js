@@ -6,16 +6,17 @@ module.exports = {
   async issueAll(req, res){  // issue all 
     res.json(await (new CPRPOperations).issueAll(req.account));
   },
+
   async issue(req, res){  // issue
-    const { asset, assetResource, price, quantity } = req.body;
-    res.json(await (new CPRPOperations).issue(req.account, {asset, assetResource, price, quantity}));
+    const { asset,  price, quantity, currency } = req.body;
+    res.json(await (new CPRPOperations).issue(req.account, {asset,  price, quantity, currency}));
   },
   async incomeAll(req, res){  // income all
     res.json(await (new CPRPOperations).incomeAll(req.account));
   },
   async income(req, res){  // income
-    const { asset, assetResource, price, quantity } = req.body;
-    res.json(await (new CPRPOperations).income(req.account, {asset, assetResource, price, quantity}));
+    const { asset, price, quantity, currency } = req.body;
+    res.json(await (new CPRPOperations).income(req.account, {asset, price, quantity, currency}));
   },
   async makeOffer(req, res){  // create offer
     const { market, asset, price, currency, quantity, price_original } = req.body;

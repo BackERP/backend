@@ -26,7 +26,6 @@ export default class CPRPBuyRegistrs extends CPRPQuery
 
     async convertData(records)
     {
-       console.log('records', records.length);
        return records.map((obj)=>{
           obj.link_address = CPRPCommonHelper.pathByProvider(obj.resource_data.provider_data.name, obj.resource_data.resource);
           return obj;});

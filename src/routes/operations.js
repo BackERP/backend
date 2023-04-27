@@ -8,8 +8,8 @@ import authenticateEmptyJWT from '../controllers/authenticateEmptyJWT';
 
 router.post('/issueAll', authenticateJWT, operationsController.issueAll);
 router.post('/issue', authenticateJWT, operationsController.issue);
-router.post('/income', authenticateJWT, operationsController.issueAll);
-router.post('/incomeAll', authenticateJWT, operationsController.issue);
+router.post('/income', authenticateJWT, operationsController.income);
+router.post('/incomeAll', authenticateJWT, operationsController.incomeAll);
 
 
 router.post('/makeOffer', authenticateJWT, operationsController.makeOffer);

@@ -40,8 +40,8 @@ export default class CPRPOperations extends CPRPQuery
     async issueAll(account)
     {
       const resources = await (new CPRPAssetsResources).listDataByPinataIPFS();
-      return await map(objSpecInfoItems, async (resource)=>{
-        return this.issue(account, {asset:resource.asset_data.uuid, asset_resource_data: resource, asset_resource: resource.uuid, price: 0, quantity: 100, currency: DefaultSetting.currency});
+      return await map(resources, async (resource)=>{
+        return await this.issue(account, {asset:resource.asset_data.uuid, asset_resource_data: resource, asset_resource: resource.uuid, price: 0, quantity: 100, currency: DefaultSetting.currency});
       });
 
     }
@@ -49,6 +49,7 @@ export default class CPRPOperations extends CPRPQuery
     async detectResourceIPFS(asset)
     {
       const resources = await (new CPRPAssetsResources).resourcePinataIPFS(asset);
+
       if(resources.length == 0)
         return;                                                                       
       return resources[0];
@@ -56,10 +57,15 @@ export default class CPRPOperations extends CPRPQuery
     async isIssued(asset)                                                                                 
     {                                             
        const rec = await (new CPRPBookRecords).findAssetInBooks([Books.issues], asset);
-       return rec.length > 0;                                                        
+       return (rec.length > 0);                                                        
     }
     async issue(account, obj)
     {
+      try{
+          if(obj.quantity < 1)
+           throw new Error('Quantity must be greater than zero');
+
+       obj.currency = DefaultSetting.currency;
        if(obj.asset_resource_data == undefined)
        {
          obj.asset_resource_data = await this.detectResourceIPFS(obj.asset);
@@ -67,9 +73,12 @@ export default class CPRPOperations extends CPRPQuery
             throw new Error('The asset has no IPFS implementation');
          obj.asset_resource = obj.asset_resource_data.uuid;
        }
-       if(this.isIssued(obj.asset))
-          return;
-       return await (new CPRPDocuments).create(account,
+//       throw new Error('isIssued');
+       if(await this.isIssued(obj.asset))
+          return this.returnData();
+
+
+       return this.returnData(await (new CPRPDocuments).create(account,
                                                TypeDocuments.issue, 
                                                DocumentsStates.issue.completed, 
                                                undefined, //market
@@ -79,13 +88,16 @@ export default class CPRPOperations extends CPRPQuery
                                                 from_subject_specification: obj.asset_resource_data.asset_data.subject_specification_data.uuid,
                                                },
                                                [{asset: obj.asset, asset_resource: obj.asset_resource, price: obj.price, currency: obj.currency, quantity: obj.quantity}]
-                                              );
+                                              ));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
     }
     async incomeAll(account)
     {       
       const resources = await (new CPRPAssetsResources).listDataByPhysically();
-      return await map(objSpecInfoItems, async (resource)=>{
-        return this.income(account, {asset:resource.asset_data.uuid, asset_resource_data: resource, asset_resource: resource.uuid, price: 0, quantity: 1, currency: DefaultSetting.currency});
+      return await map(resources, async (resource)=>{
+        return await this.income(account, {asset:resource.asset_data.uuid, asset_resource_data: resource, asset_resource: resource.uuid, price: 0, quantity: 1, currency: DefaultSetting.currency});
       });
 
 
@@ -106,6 +118,12 @@ export default class CPRPOperations extends CPRPQuery
 //asset, asset_resource, price, quantity
     async income(account, obj)
     {
+
+      try{
+          if(obj.quantity < 1)
+             throw new Error('Quantity must be greater than zero');
+
+       obj.currency = DefaultSetting.currency;
        if(obj.asset_resource_data == undefined)
        {
          obj.asset_resource_data = await this.detectResourcePhysically(obj.asset);
@@ -113,11 +131,11 @@ export default class CPRPOperations extends CPRPQuery
             throw new Error('The asset has no Physically implementation');
          obj.asset_resource = obj.asset_resource_data.uuid;
        }
-       if(this.isIncomed(obj.asset))
-          return;
-       return await (new CPRPDocuments).create(account,
-                                               TypeDocuments.income, 
-                                               DocumentsStates.income.completed,
+       if(await this.isIncomed(obj.asset))
+          return this.returnData();
+       return this.returnData(await (new CPRPDocuments).create(account,
+                                               TypeDocuments.income_invoice, 
+                                               DocumentsStates.income_invoice.completed,
                                                undefined, //market
                                                obj.currency,
                                                {subject: DefaultSetting.subject,
@@ -125,7 +143,10 @@ export default class CPRPOperations extends CPRPQuery
                                                 from_subject_specification: obj.asset_resource_data.asset_data.subject_specification_data.uuid,
                                                },
                                                [{asset: obj.asset, asset_resource: obj.asset_resource, price: obj.price, currency: obj.currency, quantity: obj.quantity}]
-                                              );
+                                              ));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
     }
 //market, asset, price, currency, quantity, price_original
     async getAsset(asset)
@@ -139,6 +160,12 @@ export default class CPRPOperations extends CPRPQuery
     }
     async makeOffer(account, obj)
     {
+      try{
+//           throw new Error('makeOffer');
+
+          if(obj.price < 0)
+             throw new Error('Price must be positive');
+
        const asset_data = await this.getAsset(obj.asset);
        if(asset_data == undefined)
           throw new Error('The asset is not found');
@@ -155,7 +182,7 @@ export default class CPRPOperations extends CPRPQuery
 //             issue: rec.reg_specification_data.uuid,
            }
        });
-       return await (new CPRPDocuments).create(account,
+       return this.returnData(await (new CPRPDocuments).create(account,
                                                TypeDocuments.offer, 
                                                DocumentsStates.offer.completed,
                                                obj.market, //market
@@ -165,7 +192,10 @@ export default class CPRPOperations extends CPRPQuery
                                                 from_subject_specification: asset_data.subject_specification_data.uuid,
                                                },
                                                spec
-                                              );
+                                              ));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
 
        //Находим контольные ссылки на запись в реестре выпуска 
        //И создаем документ предложения
@@ -174,15 +204,23 @@ export default class CPRPOperations extends CPRPQuery
 //asset, quantity
     async makeReserve(account, obj)
     {
+      try{
        const sources = await (new CPRPBookRecords).findAssetInBooks([Books.issues], obj.asset);
-       return await (new CPRPBookRecords).moveRecords(account, Books.reserves, sources, quantity);
+       return this.returnData(await (new CPRPBookRecords).moveRecords(account, Books.reserves, sources, quantity));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
 
     }
 //asset, quantity
     async freeReserve(account, obj)
     {
+      try{
        const sources = await (new CPRPBookRecords).findAssetInBooks([Books.reserves], obj.asset);
-       return await (new CPRPBookRecords).backRecords(account, sources, quantity);
+       return this.returnData(await (new CPRPBookRecords).backRecords(account, sources, quantity));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
     }
 
 //sources - тут ссылка на offer, fullname, email, phone, order_number
@@ -203,6 +241,7 @@ export default class CPRPOperations extends CPRPQuery
     }
     async makeOrder(account, obj)
     {
+      try{
       //Находим спецификациии исочника, 
       //issue_record - как контрол спецификации
       const control_spec = obj.sources.map((src)=>src.uuid);
@@ -237,7 +276,7 @@ export default class CPRPOperations extends CPRPQuery
 
       });
 
-       return await (new CPRPDocuments).create(account,
+       return this.returnData(await (new CPRPDocuments).create(account,
                                                TypeDocuments.order, 
                                                DocumentsStates.order.completed,
                                                undefined, //market
@@ -247,12 +286,16 @@ export default class CPRPOperations extends CPRPQuery
                                                 to_subject_data: {fullname:obj.fullname, email: obj.email, phone: obj.phone}
                                                },
                                                spec
-                                              );
+                                              ));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
 
     }
 //sources, quantity
     async makeReturn(account, obj)
     {
+      try{
       const control_spec = obj.sources.map((src)=>src.uuid);
       const records = await (new CPRPBookRecords).findByRegSpec(control_spec); // записи из оффера
       const spec = obj.sources.map((src)=>{
@@ -273,7 +316,7 @@ export default class CPRPOperations extends CPRPQuery
 
       });
 
-       return await (new CPRPDocuments).create(account,
+       return this.returnData(await (new CPRPDocuments).create(account,
                                                TypeDocuments.returnAsset, 
                                                DocumentsStates.returnAsset.completed,
                                                undefined, //market
@@ -282,7 +325,10 @@ export default class CPRPOperations extends CPRPQuery
                                                 to_subject: DefaultSetting.subject,
                                                },
                                                spec
-                                              );
+                                              ));
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
       
     }
 
@@ -296,6 +342,7 @@ export default class CPRPOperations extends CPRPQuery
     }
     async makePaid(account, obj)
     {
+      try{
       const document = await this.getDoc(obj.order);
       const  specifications = await (new CPRPBookRecords).findByDoc(document.uuid);
       const contacts = await (new CPRPDocumentContacts).listData(document.uuid);
@@ -316,7 +363,7 @@ export default class CPRPOperations extends CPRPQuery
          }
 
       });
-       return await (new CPRPDocuments).create(account,
+       return this.returnData(await (new CPRPDocuments).create(account,
                                                TypeDocuments.paid, 
                                                DocumentsStates.paid.completed,
                                                undefined, //market
@@ -330,9 +377,13 @@ export default class CPRPOperations extends CPRPQuery
                                                },
                                                spec,
                                                contacts
-                                              );
+                                              ));
 
+        }catch(err) {
+            return {ok:false, error:err.message, data: null};
+      }
       
+
     }
 
 }

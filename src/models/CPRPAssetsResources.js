@@ -48,6 +48,16 @@ export default class CPRPAssetsResources extends CPRPQuery
                         );
 
     }
+    async getByAssetProviderData(asset, provider)
+    {
+      return this.requestData(PRPAssetsResources
+                         ,CPRPQueryLib.assets_resources.items()
+                         ,{asset: asset, provider: provider, state: State.Active}
+                         ,this.convertData
+                        );
+
+    }
+
 
     async list(asset, page, countItems)
     {

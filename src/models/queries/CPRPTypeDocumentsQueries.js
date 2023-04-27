@@ -20,7 +20,7 @@ export default class CPRPTypeDocumentsQueries
                             model: PRPSubjects
                             ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'subject_data'
-                            ,required: true
+                            ,required: false
                             ,include: [{
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']

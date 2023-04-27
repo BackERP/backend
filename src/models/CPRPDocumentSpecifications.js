@@ -4,6 +4,7 @@ import { map } from 'modern-async'
 
 
 import {State} from './enums/State';
+import {StateMarketOffer} from './enums/StateMarketOffer';
 import CPRPQuery from './CPRPQuery';
 import CPRPQueryLib from './CPRPQueryLib';
 import {countRecordsOnPage}  from '../config/config';
@@ -14,6 +15,7 @@ import CPRPBookRecords from './CPRPBookRecords';
 const sequelize = require('./db').sequelize;
 const Sequelize = require('./db').Sequelize;
 const Op = Sequelize.Op;
+
 
 
 
@@ -60,6 +62,22 @@ export default class CPRPDocumentSpecifications extends CPRPQuery
                         );
 
     }
+    async findAssetMarketData(market, asset, asset_resource)
+    {
+      return this.requestData(PRPDocumentSpecifications
+                         ,CPRPQueryLib.document_specifications.items()
+                         ,{ state: State.Active, 
+                            asset, 
+                            asset_resource, 
+                            document: {
+                                     [Op.in]: Sequelize.literal("(select offer from PRPMarketOffers where market='"+ market + "' and stateMarket = " + StateMarketOffer.Active + ")")
+                                   }
+
+                          }
+                        );
+
+    }
+
     async createTrn(t, account, obj)
     {
       return await PRPDocumentSpecifications.create({ document: obj.document,
@@ -80,19 +98,20 @@ export default class CPRPDocumentSpecifications extends CPRPQuery
 
      async createBySpecTrn(t, type, document, subject, subject_specification, isRegist, spec, account)
      {
-         return await map(objSpecInfoItems, async (itemSpc)=>{
+         return await map(spec, async (itemSpc)=>{
             const objSpc = await this.createTrn(t, account, { document: document,
-                                                              asset: obj.asset,
-                                                              asset_resource: obj.asset_resource,
-                                                              asset_metadata_resource: obj.asset_metadata_resource,
-                                                              quantity: obj.quantity,
-                                                              price: obj.price,
-                                                              sum: obj.quantity*obj.price,
-                                                              currency: obj.currency,
-                                                              source_record: obj.source_record,
-                                                              control_record: obj.control_record,
+                                                              asset: itemSpc.asset,
+                                                              asset_resource: itemSpc.asset_resource,
+                                                              asset_metadata_resource: itemSpc.asset_metadata_resource,
+                                                              quantity: itemSpc.quantity,
+                                                              price: itemSpc.price,
+                                                              sum: itemSpc.quantity*itemSpc.price,
+                                                              currency: itemSpc.currency,
+                                                              source_record: itemSpc.source_record,
+                                                              control_record: itemSpc.control_record,
                                                            }
                                               );
+
             if(isRegist)
                await (new CPRPBookRecords).createBySpecTrn(t, type, document, subject, subject_specification, objSpc.uuid, itemSpc, account);
 

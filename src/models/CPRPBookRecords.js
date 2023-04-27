@@ -1,3 +1,31 @@
+/*****************************************************************************/
+/*
+  Идея для развития
+  Есть два вида записей
+  1. Это желание (переместить, передать)
+  2. Это реальное перемещение (оно может быть прямым и опосредованным)
+  Любые операции - это комбинации этих типов действий
+  Принял товар, хочу его продать
+  Хочу купить, нужно под это найти товар
+  Формально 
+   Перемещение - желание      - желание - перемещение - перемещение
+   (приход)     - (предложение)  (заказ) - (покупка)  - (возврат)
+  Желание - желание - перемещение
+  (заказ)   (заказ у поставщека) - (приход) - (передача)
+это можно формализовать на урове правил отношения между ними - (уменьшаем желание, увеличиваем перемещение и т.д)
+Тогда эти отношения можо убрать из кода, и формально описать. На этом уровне описать правила работы ведения конкретной книги
+
+Еще мысль, это все можно распространить и на субъектов и их отношения (в качестве документа использвать договор (найма, сотрудничества и т.д.))
+Тогда отошения между субъектами будут оределятся правилами ведения книги
+Там тоже отношения желание - акт
+
+А потом - это все можно вынести на уровень blockchain
+книга - это контракт asset - ERC 20
+
+
+*/
+/*****************************************************************************/
+
 const PRPBookRecords = require('./db').PRPBookRecords;
 import {State} from './enums/State';
 import CPRPQuery from './CPRPQuery';
@@ -272,66 +300,64 @@ export default class CPRPBookRecords extends CPRPQuery
     async createBySpecTrn(t, type, reg_document, subject, subject_specification, reg_specification, spec, account)
     {
         const typeDocuments = await (new CPRPTypeDocuments).getData(type);
+
         if(typeDocuments.length == 0)
           throw new Error('Unknown document type');
         const typeDocument = typeDocuments[0];
+
         const book = typeDocument.book_data.uuid;
-        const issue_spec = spec.reduce((t, spc)=>{
-          if(spc.issue_record !== undefined)
-             t.push(spc.issue_record);
-           return t;
-        }, []);
-        const master_records = await this.findByRegSpec(issue_spec);
-        const control_spec = spec.reduce((t, spc)=>{
-          if(spc.control_record !== undefined)
-             t.push(spc.control_record);
-           return t;
-        }, []);
 
-        const control_records = await this.findByRegSpec(control_spec);
+        let master_records = [];
+        if(spec.issue_record !== undefined)
+           master_records = await this.findByRegSpec([spec.issue_record]);
+
+
+       let control_records = [];
+       if(spec.control_record !== undefined)
+          control_records = await this.findByRegSpec([spec.control_record]);
 
 
 
-        return await map(spec, async (itm)=>{
-           const master_record = master_records.find((r)=>r.reg_specification == itm.issue_record);
-           const control_record = control_records.find((r)=>r.reg_specification == itm.control_record);
+           const master_record = master_records.find((r)=>r.reg_specification == spec.issue_record);
+           const control_record = control_records.find((r)=>r.reg_specification == spec.control_record);
            let master_record_uuid;
 
            if(master_record !== undefined)
            {
+
              master_record_uuid = master_record.uuid;
-             if(master_record.quantity < itm.quantity)
+             if(master_record.quantity < spec.quantity)
                 throw new Error('Quantity more than available in issue');
-             if(control_record !== undefined && control_record.quantity < itm.quantity)
+             if(control_record !== undefined && control_record.quantity < spec.quantity)
                 throw new Error('Quantity more than available in source document');
 
            }
+
  
            return await this.createByItemSpecTrn(t, account, { book: book,
                                                                reg_number: uuid(),
                                                                dateReg: new Date(),
                                                                subject: subject,
                                                                subject_specification: subject_specification,
-                                                               asset: itm.asset,
-                                                               asset_resource: itm.asset_resource,
-                                                               asset_metadata_resource: itm.asset_metadata_resource,
-                                                               price: itm.price,
-                                                               quantity: itm.quantity,
-                                                               sum: itm.price*itm.quantity,
-                                                               currency: itm.currency,
+                                                               asset: spec.asset,
+                                                               asset_resource: spec.asset_resource,
+                                                               asset_metadata_resource: spec.asset_metadata_resource,
+                                                               price: spec.price,
+                                                               quantity: spec.quantity,
+                                                               sum: spec.price*spec.quantity,
+                                                               currency: spec.currency,
                                                                reg_document: reg_document,
                                                                reg_specification: reg_specification,
-                                                               source_record: obj.source_record,
-                                                               issue_record: itm.issue_record,
+                                                               source_record: spec.source_record,
+                                                               issue_record: spec.issue_record,
                                                                master_record: master_record_uuid,
-                                                               control_record: itm.control_record,
-                                                               move_to_record: itm.move_to_record,
-                  }, itm.isBreak !== undefined && itm.isBreak);
+                                                               control_record: spec.control_record,
+                                                               move_to_record: spec.move_to_record,
+                  }, spec.isBreak !== undefined && spec.isBreak);
 
 
 //           const record = await this.
 
-        });
     }
 
     async moveRecords(account, book, sources, quantity)

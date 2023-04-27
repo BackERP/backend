@@ -41,7 +41,7 @@ export default class CPRPBookRecordsQueries
                             model: PRPSubjectSpecification
                             ,attributes: ['uuid', 'description']
                             ,as: 'subject_specification_data'
-                            ,required: true
+                            ,required: false
                             ,include: [{
                                model: PRPSubjects
                               ,attributes: ['uuid', 'name', 'inner_name']
@@ -111,7 +111,7 @@ export default class CPRPBookRecordsQueries
                             model: PRPSubjects
                             ,attributes: ['uuid', 'name', 'inner_name']
                             ,as: 'subject_data'
-                            ,required: true
+                            ,required: false
                             ,include: [{
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']

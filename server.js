@@ -60,6 +60,7 @@ const viewPersonsRouter = require('./src/routes/viewpersons');
 const viewSubjectsRouter = require('./src/routes/viewsubjects');
 const helperRouter = require('./src/routes/helper');
 const operationsRouter = require('./src/routes/operations');
+const assetMarketRouter = require('./src/routes/assetmarket');
 
 
 
@@ -194,6 +195,9 @@ app.use('/'+ api_version + '/api/representations/viewsubjects', viewSubjectsRout
 app.use('/'+ api_version + '/api/helper', helperRouter); // Вспомогательые функции
 
 app.use('/'+ api_version + '/api/operations', operationsRouter); // Операции
+app.use('/'+ api_version + '/api/assetmarket', assetMarketRouter); // Маркет актива
+
+
 
 
 
