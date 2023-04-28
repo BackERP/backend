@@ -96,6 +96,22 @@ export default class CPRPBookRecords extends CPRPQuery
                           }
                         );
     }
+    async findByListDoc(documents)
+    {
+      return this.requestData(PRPBookRecords
+                         ,CPRPQueryLib.book_records.items()
+                         ,{ state: State.Active,
+                             reg_document: {
+
+                                  [Op.in]: documents
+                             },
+                             next_record: {
+                               [Op.is]: null
+                             },
+                          }
+                        );
+    }
+
     async findByRegSpecRecord(uuid)
     {
       return this.requestData(PRPBookRecords

@@ -61,6 +61,10 @@ const viewSubjectsRouter = require('./src/routes/viewsubjects');
 const helperRouter = require('./src/routes/helper');
 const operationsRouter = require('./src/routes/operations');
 const assetMarketRouter = require('./src/routes/assetmarket');
+const marketPointRouter = require('./src/routes/marketpoint');
+
+
+
 
 
 
@@ -196,6 +200,9 @@ app.use('/'+ api_version + '/api/helper', helperRouter); // Вспомогате
 
 app.use('/'+ api_version + '/api/operations', operationsRouter); // Операции
 app.use('/'+ api_version + '/api/assetmarket', assetMarketRouter); // Маркет актива
+
+app.use('/'+ api_version + '/api/marketpoint/:marketplace', marketPointRouter); // конечная точка маркетинга
+
 
 
 

@@ -257,6 +257,15 @@ export default class CPRPBookRecordsQueries
                             ,attributes: ['uuid', 'resource']
                             ,as: 'asset_resource_data'
                             ,required: false
+                            ,include:[
+                              {
+                                 model: PRPAssetsProviders
+                                ,attributes: ['uuid', 'name', 'default_item']
+                                ,as: 'provider_data'
+                                ,required: true
+                              },
+                             ]
+
                           },
                           {     
                              model: PRPAssetsMetaDataResources

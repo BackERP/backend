@@ -80,6 +80,15 @@ export default class CPRPAssetsResources extends CPRPQuery
                         );
     }
 
+    async getAllDefaultData()
+    {
+      return this.requestData(PRPAssetsResources
+                         ,CPRPQueryLib.assets_resources.items()
+                         , {state: State.Active, default_item: true}
+                        );
+    }
+
+
     async getData(uuid)
     {
       return this.requestData(PRPAssetsResources

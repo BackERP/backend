@@ -6,7 +6,7 @@ const PRPSubjectTypes = require('../db').PRPSubjectTypes;
 const PRPSubjectSpecification = require('../db').PRPSubjectSpecification;
 const PRPTypeRelations = require('../db').PRPTypeRelations;
 const PRPPersons = require('../db').PRPPersons;
-const PRPCurrencies = require('../db').PRPCurrenciesQueries;
+const PRPCurrencies = require('../db').PRPCurrencies;
 
 
 export default class CPRPDocumentsQueries
@@ -20,6 +20,7 @@ export default class CPRPDocumentsQueries
                        ], 
                 raw: true,
                 nest: true,
+
                 include: [
                           {
                             model: PRPTypeDocuments
@@ -33,7 +34,7 @@ export default class CPRPDocumentsQueries
                             model: PRPSubjectSpecification
                             ,attributes: ['uuid', 'description']
                             ,as: 'subject_specification_data'
-                            ,required: true
+                            ,required: false
                             ,include: [{
                                model: PRPSubjects
                               ,attributes: ['uuid', 'name', 'inner_name']
@@ -99,6 +100,7 @@ export default class CPRPDocumentsQueries
                            ]
 
                           },
+
                           {
                             model: PRPSubjects
                             ,attributes: ['uuid', 'name', 'inner_name']
@@ -279,6 +281,7 @@ export default class CPRPDocumentsQueries
                            ]
 
                           },
+
                           {
                             model: PRPSubjects
                             ,attributes: ['uuid', 'name', 'inner_name']
@@ -311,14 +314,15 @@ export default class CPRPDocumentsQueries
                             ,as: 'documentState_data'
                             ,required: true
                           },
-
                           {
                             model: PRPAccounts
                            ,attributes: ['uuid', 'login']
                            ,as: 'createAccount_data'
-                           ,required: true
+                           ,required: false
                          },
+
                        ]
+
              }
    }
 }

@@ -1,6 +1,8 @@
 
 import {MONGODB}  from '../../config/config';
 import { MongoClient } from "mongodb";
+import { map } from 'modern-async'
+
 
 const getDBItem = async (collection, params)=>
 {
@@ -12,11 +14,18 @@ const getDBItem = async (collection, params)=>
 }
 const getDBList = async (collection, params)=>
 {
-       const query = { market: params.market, object_uuid: {$in:params.object_uuid}};
+/*
+почему-то не работает, надо разбираться, но сейчас нет времени, поэтому хак
+       const query = {$and:[{ market: params.market}, {object_uuid: {$in:params.list_uuid}}]};
        let representations = await collection.find(query);
+        console.log(representations);
        if(representations == null)
          representations = undefined;
        return representations;
+*/
+   return await map(params.list_uuid, async (object_uuid)=>{
+      return await getDBItem(collection, {market: params.market, object_uuid});
+   });
 
 }
 const deleteDB = async (collection, params)=>
@@ -132,6 +141,7 @@ export default class CRPRMDBMarketRepresentations
     }
     async list(market, list_uuid)
     {
+
       return await this.requestDB(getDBList, {market, list_uuid});
     }
 

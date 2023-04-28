@@ -21,7 +21,12 @@ export default class DefaultSetting
        return '595e4e89-8877-444a-bb40-32d3dc3ee9ea';
     }
 
-
+    static market(marketplace)
+    {
+       if(marketplace == 'joincharible')
+         return '1c487808-b383-44b1-959c-e840f1f90d09';
+       return 'e946b703-8ba3-41a1-a8d9-c3b07809e455';
+    }
 
 
 }

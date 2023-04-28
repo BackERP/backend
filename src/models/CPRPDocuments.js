@@ -9,6 +9,8 @@ import CPRPMarketOffers from './CPRPMarketOffers';
 import CPRPDocumentContacts from './CPRPDocumentContacts';
 import CPRPDocumentSpecifications from './CPRPDocumentSpecifications';
 import { v4 as uuid } from 'uuid';
+import {StateMarketOffer} from './enums/StateMarketOffer';
+
 
 
 
@@ -52,6 +54,58 @@ export default class CPRPDocuments extends CPRPQuery
                          , page
                         );
     }
+
+    async findOnMarketData(market, type)
+    {
+
+      return this.requestData(PRPDocuments
+                         ,CPRPQueryLib.documents.items()
+                         ,{ state: State.Active, 
+                            uuid: {
+                                     [Op.in]: Sequelize.literal("(select offer from PRPMarketOffers where market='"+ market + "' and stateMarket = " + StateMarketOffer.Active + ")")
+                                   },
+                            type: type
+
+                          }
+                        );
+
+    }
+   async findOnMarketBySubjectData(market, type, subject)
+   {
+      return this.requestData(PRPDocuments
+                         ,CPRPQueryLib.documents.items()
+                         ,{ state: State.Active, 
+                            uuid: {
+                                     [Op.in]: Sequelize.literal("(select offer from PRPMarketOffers where market='"+ market + "' and stateMarket = " + StateMarketOffer.Active + ")")
+                                   },
+                            type: type,
+                            from_subject: subject,
+
+                          }
+                        );
+   }
+
+    async findOnMarketSameSubjectData(market, type, offer)
+    {
+      const sql = "(select offer from PRPMarketOffers "
+                +" where market='"+ market + "' and stateMarket = " 
+                + StateMarketOffer.Active 
+                + " and offer in (select uuid from PRPDocuments where type = '" + type+ "' and from_subject in ("
+                + " select from_subject from PRPDocuments where uuid ='" + offer + "')"
+                + "))";
+      return this.requestData(PRPDocuments
+                         ,CPRPQueryLib.documents.items()
+                         ,{ state: State.Active, 
+                            uuid: {
+                                     [Op.in]: Sequelize.literal(sql)
+                                   },
+                            type: type
+
+                          }
+                        );
+
+    }
+
 
     async createTrn(t, account, obj)
     {

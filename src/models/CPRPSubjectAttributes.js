@@ -57,7 +57,19 @@ export default class CPRPSubjectAttributes extends CPRPQuery
                          ,this.convertData
                         );
     }
+    async findBySubjectsData(subjects)
+    {
+      return this.requestData(PRPSubjectAttributes
+                         ,CPRPQueryLib.subject_attributes.items()
+                         ,{ state: State.Active,
+                            subject: {
+                              [Op.in]: subjects
+                            }
+                          }
+                         ,this.convertData
+                        );
 
+    }
 
     async create(account, obj)
     {
