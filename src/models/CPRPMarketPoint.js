@@ -53,7 +53,15 @@ export default class CPRPMarketPoint extends CPRPQuery
        
     }
 
-
+    nickLinkSubject(uuid)
+    {
+       if(uuid == '0ca4034f-b74a-4644-b3f0-193dbd712d69')
+         return 'autismchallenge';
+       if(uuid == '3e32ac13-742c-4860-9653-232e112bc883')
+         return 'otkrytofond';
+       if(uuid == 'a6b7b385-358f-4604-8d9a-97ab6a1c9399')
+         return 'dobriymir';
+    }
 
     async makeViewRecords(market, records)
     {
@@ -151,12 +159,16 @@ export default class CPRPMarketPoint extends CPRPQuery
           const image_link = (image_data !== undefined)?image_data.image:undefined;
           const viewperson = viewpersons.find((o)=>o.object_uuid == r.asset_data.subject_specification_data.person_data.uuid);
           viewperson.fullname = getFullName(viewperson.first_name, viewperson.middle_name, viewperson.last_name);
+          const viewsubject = viewsubjects.find((o)=>o.object_uuid == r.asset_data.subject_data.uuid);
+          viewsubject.page_link = this.nickLinkSubject(r.asset_data.subject_data.uuid);
+
+
 
           const data = {
              asset: asset,
              viewasset: viewassets.find((o)=>o.object_uuid == asset),
              suject: r.asset_data.subject_data.uuid,
-             viewsubject: viewsubjects.find((o)=>o.object_uuid == r.asset_data.subject_data.uuid),
+             viewsubject: viewsubject,
              subjectmedia: subjectattribures.reduce((t, s)=>{
                                                                 if(s.subject_data.uuid != r.asset_data.subject_data.uuid)
                                                                   return t;
