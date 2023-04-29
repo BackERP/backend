@@ -299,7 +299,7 @@ export default class CPRPMarketPoint extends CPRPQuery
            const viewoffers = await this.makeViewRecords(market, records);
            const subjects_gallery = this.makeSubjectsGallery(viewoffers);
 
-           return this.returnData({subjects_gallery});
+           return this.returnData({subject_gallery:subjects_gallery[0]});
         }
         catch(err) {
             return {ok:false, error:err.message, data: null};
