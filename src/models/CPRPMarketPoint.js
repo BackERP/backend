@@ -166,9 +166,17 @@ export default class CPRPMarketPoint extends CPRPQuery
                                                                   return t;
 
                                                                 if(s.attribute_data.type_value == "media")
-                                                                  t[s.attribute_data.name.replace(' ','_')] = CPRPCommonHelper.pathLocal(s.string_value);
+                                                                {
+                                                                   t.push({ name: s.attribute_data.name,
+                                                                            link: CPRPCommonHelper.pathLocal(s.string_value)
+                                                                   });
+                                                                }
+//                                                                  t[s.attribute_data.name.replace(' ','_')] = CPRPCommonHelper.pathLocal(s.string_value);
+
                                                                 return t;
                                                       }, []);
+          viewsubject.Lable = subjectmedia.find((a)=>a.name == 'Lable');
+
 
           //console.log('subjectmedia', subjectmedia);
 
@@ -177,7 +185,7 @@ export default class CPRPMarketPoint extends CPRPQuery
              viewasset: viewassets.find((o)=>o.object_uuid == asset),
              suject: r.asset_data.subject_data.uuid,
              viewsubject: viewsubject,
-             subjectmedia: subjectmedia,
+//             subjectmedia: subjectmedia,
              person: r.asset_data.subject_specification_data.person_data.uuid,
              viewperson: viewperson,
              offer: r.reg_document_data.uuid,
@@ -227,7 +235,7 @@ export default class CPRPMarketPoint extends CPRPQuery
            t.push({ uuid: r.suject,
                     order: r.viewsubject.order, 
                     view: r.viewsubject,
-                    media: r.subjectmedia,
+//                    media: r.subjectmedia,
                     offers: [],
                     count_creations: 0,
                     count_tokens: 0,
