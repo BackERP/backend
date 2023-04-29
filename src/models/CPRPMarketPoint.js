@@ -42,10 +42,23 @@ export default class CPRPMarketPoint extends CPRPQuery
        return await (new CPRPBookRecords).findByListDoc(list_offers);
        
     }
+    async getBooksRecordsByControl(records)
+    {
+       const control_specs  =  records.reduce((t,r)=>{
+         if(r.control_record_data !== undefined)
+           t.push(r.control_record_data.uuid);
+          return t; 
+       }, []);
+       return await (new CPRPBookRecords).findByRegSpec(control_specs);
+       
+    }
+
 
 
     async makeViewRecords(market, records)
     {
+       const issueRecords = await this.getBooksRecordsByControl(records);
+
        const asset_resource_images  = await (new CPRPAssetsResources()).getAllDefaultData();
        const resource_images = asset_resource_images.map((r)=>{
          return {asset: r.asset_data.uuid,
@@ -83,12 +96,13 @@ export default class CPRPMarketPoint extends CPRPQuery
        const getFullName = (first_name, middle_name, last_name) =>
        {
          let full_name = '';
-         if(first_name !== undefined && first_name !== null && first_name === '')
+         if(first_name !== undefined && first_name !== null && first_name !== '')
            full_name = first_name;
-         if(middle_name !== undefined && middle_name !== null && middle_name === '')
-           full_name += (full_name == '')?middle_name:' ' + middle_name;
-         if(last_name !== undefined && last_name !== null && last_name === '')
-           full_name += (full_name == '')?last_name:' ' + last_name;
+         if(middle_name !== undefined && middle_name !== null && middle_name !== '')
+           full_name = full_name + ((full_name == '')?middle_name:' ' + middle_name);
+         if(last_name !== undefined && last_name !== null && last_name !== '')
+           full_name = full_name + ((full_name == '')?last_name:' ' + last_name);
+
          return full_name;
        }
 
@@ -97,10 +111,13 @@ export default class CPRPMarketPoint extends CPRPQuery
           const resource = r.asset_resource_data.resource;
           const resource_provider =r.asset_resource_data.provider_data.uuid;
           const isOriginal = (resource_provider == DefaultSetting.physicProvider);
-          const quantity = r.quantity;
+          
+          const issueRecord = issueRecords.find((o)=>o.reg_specification_data.uuid == r.control_record_data.uuid);
+          const rest = (issueRecord !== undefined)?issueRecord.quantity:0;
           const issue = r.control_record_data.quantity;
           const price = r.price;
           const source = r.reg_specification_data.uuid;
+          const progress = Math.round((100 * Number(rest)) / Number(issue));
 
           const index = findIndexAssetOffer(t, asset);
 
@@ -110,20 +127,22 @@ export default class CPRPMarketPoint extends CPRPQuery
               if(isOriginal)
               {
                  t[index].original.price = price;
-                 t[index].original.quantity += Number(quantity);
+                 t[index].original.sold += Number(issue) - Number(rest);
                  t[index].original.issue += Number(issue);
-                 t[index].original.rest += Number(issue) - Number(quantity);
+                 t[index].original.rest += Number(rest);
                  t[index].original.resource = resource;
                  t[index].original.source = source;
+                 t[index].original.progress = progress;
                }
                else
                {
                  t[index].token.price = price;
-                 t[index].token.quantity += Number(quantity);
+                 t[index].token.rest += Number(rest);
                  t[index].token.issue += Number(issue);
-                 t[index].token.rest += Number(issue) - Number(quantity);
+                 t[index].token.sold += Number(issue) - Number(rest);
                  t[index].token.resource = resource;
                  t[index].token.source = source;
+                 t[index].token.progress = progress;
                }
                return t;
           }
@@ -152,20 +171,22 @@ export default class CPRPMarketPoint extends CPRPQuery
              image_link: image_link,
              token: {
                       price: (!isOriginal)?price:0,
-                      quantity: (!isOriginal)?Number(quantity):0,
+                      rest: (!isOriginal)?Number(rest):0,
                       issue: (!isOriginal)?Number(issue):0,
-                      rest: (!isOriginal)?(Number(issue) - Number(quantity)):0,
+                      sold: (!isOriginal)?(Number(issue) - Number(rest)):0,
                       resource: (!isOriginal)?resource:'',
                       source: (!isOriginal)?source:undefined,
+                      progress: (!isOriginal)?progress:0,
 
                     },
              original: {
                          price: (isOriginal)?price:0,
-                         quantity: (isOriginal)?Number(quantity):0,
+                         rest: (isOriginal)?Number(rest):0,
                          issue: (isOriginal)?Number(issue):0,
-                         rest: (isOriginal)?(Number(issue) - Number(quantity)):0,
+                         sold: (isOriginal)?(Number(issue) - Number(rest)):0,
                          resource: (isOriginal)?resource:'',
                          source: (isOriginal)?source:undefined,
+                         progress: (isOriginal)?progress:0,
                        },
 
           }

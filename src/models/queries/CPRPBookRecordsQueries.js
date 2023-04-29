@@ -30,6 +30,7 @@ export default class CPRPBookRecordsQueries
                        ], 
                 raw: true,
                 nest: true,
+
                 include: [
                           {
                              model: PRPBooks
@@ -361,6 +362,7 @@ export default class CPRPBookRecordsQueries
                           },
 
                        ]
+
 
              }
    }
