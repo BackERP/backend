@@ -161,22 +161,23 @@ export default class CPRPMarketPoint extends CPRPQuery
           viewperson.fullname = getFullName(viewperson.first_name, viewperson.middle_name, viewperson.last_name);
           const viewsubject = viewsubjects.find((o)=>o.object_uuid == r.asset_data.subject_data.uuid);
           viewsubject.page_link = this.nickLinkSubject(r.asset_data.subject_data.uuid);
+          const subjectmedia = subjectattribures.reduce((t, s)=>{
+                                                                if(s.subject_data.uuid != r.asset_data.subject_data.uuid)
+                                                                  return t;
 
+                                                                if(s.attribute_data.type_value == "media")
+                                                                  t[s.attribute_data.name.replace(' ','_')] = CPRPCommonHelper.pathLocal(s.string_value);
+                                                                return t;
+                                                      }, []);
 
+          //console.log('subjectmedia', subjectmedia);
 
           const data = {
              asset: asset,
              viewasset: viewassets.find((o)=>o.object_uuid == asset),
              suject: r.asset_data.subject_data.uuid,
              viewsubject: viewsubject,
-             subjectmedia: subjectattribures.reduce((t, s)=>{
-                                                                if(s.subject_data.uuid != r.asset_data.subject_data.uuid)
-                                                                  return t;
-                                                                if(s.attribute_data.type_value == "media")
-                                                                  t[s.attribute_data.name] = CPRPCommonHelper.pathLocal(s.string_value);
-                                                                  
-                                                                return t;
-                                                      }, []),
+             subjectmedia: subjectmedia,
              person: r.asset_data.subject_specification_data.person_data.uuid,
              viewperson: viewperson,
              offer: r.reg_document_data.uuid,
@@ -202,6 +203,7 @@ export default class CPRPMarketPoint extends CPRPQuery
                        },
 
           }
+//          console.log(data);
           t.push(data);
           return t;
        }, []);
