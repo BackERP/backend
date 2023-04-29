@@ -125,7 +125,7 @@ export default class CPRPMarketPoint extends CPRPQuery
           const issue = r.control_record_data.quantity;
           const price = r.price;
           const source = r.reg_specification_data.uuid;
-          const progress = Math.round((100 * Number(rest)) / Number(issue));
+          const progress = Math.round((100 * (Number(issue) - Number(rest))) / Number(issue));
 
           const index = findIndexAssetOffer(t, asset);
 
