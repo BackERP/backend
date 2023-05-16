@@ -16,6 +16,6 @@ export default class CPRPSuccessPayManager
    {
       nunjucks.configure('./src/views/mail/en', { autoescape: true });
       const html = this.getTemplate(data);
-      return await (new CPRPSendMail).send(MAIL_MANAGER, data.holder.name + ', is bought', html);
+      return await (new CPRPSendMail).send(MAIL_MANAGER, data.holder.name + ' bought', html);
    }                                                                                 
 }
