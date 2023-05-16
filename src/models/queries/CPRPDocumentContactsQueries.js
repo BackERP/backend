@@ -14,6 +14,17 @@ const PRPCurrencies = require('../db').PRPCurrenciesQueries;
 
 export default class CPRPDocumentContactsQueries
 {
+   static record_items()
+   {
+      return {
+               attributes: ['uuid', 'contact'],
+                order: [
+                         ['createdAt', 'DESC'],
+                       ], 
+                raw: true,
+                nest: true,
+      }
+   }
    static items()
    {
       return {
@@ -39,7 +50,7 @@ export default class CPRPDocumentContactsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes
@@ -52,7 +63,7 @@ export default class CPRPDocumentContactsQueries
                             model: PRPSubjectSpecification
                             ,attributes: ['uuid', 'description']
                             ,as: 'subject_specification_data'
-                            ,required: true
+                            ,required: false
                             ,include: [{
                                model: PRPSubjects
                               ,attributes: ['uuid', 'name', 'inner_name']
@@ -62,7 +73,7 @@ export default class CPRPDocumentContactsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -80,7 +91,7 @@ export default class CPRPDocumentContactsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -98,7 +109,7 @@ export default class CPRPDocumentContactsQueries
                                    model: PRPAccounts
                                   ,attributes: ['uuid', 'login']
                                   ,as: 'createAccount_data'
-                                  ,required: true
+                                  ,required: false
                                 }]
                              },
 
@@ -106,7 +117,7 @@ export default class CPRPDocumentContactsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                              },
                              {
                                 model: PRPTypeRelations

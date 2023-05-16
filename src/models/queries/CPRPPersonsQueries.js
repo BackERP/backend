@@ -18,7 +18,7 @@ export default class CPRPPersonsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             }
                        ]
              }

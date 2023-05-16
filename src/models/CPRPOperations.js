@@ -242,32 +242,34 @@ export default class CPRPOperations extends CPRPQuery
     async makeOrder(account, obj)
     {
       try{
+
       //Находим спецификациии исочника, 
       //issue_record - как контрол спецификации
       const control_spec = obj.sources.map((src)=>src.uuid);
       const controls_price = await (new CPRPBookRecords).findByRegSpec(control_spec); // записи из оффера
       const controls_quantity = await this.findSuperControl(controls_price);
+      let currency;
 
-
-      const issues = await (new CPRPBookRecords).getByRegSpec(sources);        //записи из выпуска
+//      const issues = await (new CPRPBookRecords).getByRegSpec(sources);        //записи из выпуска
       const spec = obj.sources.map((src)=>{
         const control_price = controls_price.find((rec)=>src.uuid == rec.reg_specification_data.uuid);
         if(control_price == undefined)
           throw new Error('The source is wrong');
-        if(control_price.price != src.price)
+        if(Number(control_price.price) != Number(src.price))
           throw new Error('The price is wrong');
 
         const control_quantity = controls_quantity.find((rec)=>control_price.control_record_data.uuid == rec.reg_specification_data.uuid);
         if(control_quantity != undefined)
         {
-          if(src.quantity > control_quantity.quantity)
+          if(Number(src.quantity) > Number(control_quantity.quantity))
              throw new Error('Quantity more than available');
         }
+        currency = control_price.currency_data.uuid;
            return {
              asset: control_price.asset_data.uuid,
              asset_resource: control_price.asset_resource_data.uuid,
              price: control_price.price,
-             currency: control_price.currency,
+             currency: control_price.currency_data.uuid,
              quantity: src.quantity,
              control_record: src.uuid,
              issue_record: control_quantity != undefined? control_quantity.reg_specification_data.uuid:undefined,
@@ -275,19 +277,22 @@ export default class CPRPOperations extends CPRPQuery
            }
 
       });
-
-       return this.returnData(await (new CPRPDocuments).create(account,
+//       throw new Error('Test make order');
+       const order = await (new CPRPDocuments).create(account,
                                                TypeDocuments.order, 
                                                DocumentsStates.order.completed,
                                                undefined, //market
-                                               obj.currency,
+                                               currency,
                                                {subject: DefaultSetting.subject,
                                                 from_subject: DefaultSetting.subject,
                                                 to_subject_data: {fullname:obj.fullname, email: obj.email, phone: obj.phone}
                                                },
                                                spec
-                                              ));
+                                              );
+          const new_docs = await (new CPRPDocuments).getNewData(order.data.uuid);
+          return this.returnData(new_docs[0]);
         }catch(err) {
+            console.log('error', err.message);
             return {ok:false, error:err.message, data: null};
       }
 
@@ -335,15 +340,16 @@ export default class CPRPOperations extends CPRPQuery
 //order, sum, currency
     async getDoc(uuid)
     {
-       const docs = await (new CPRPDocuments).getData(obj.order);
+       const docs = await (new CPRPDocuments).getData(uuid);
        if(docs.length == 0)
-         return;
+          throw new Error('The document is not found');
        return docs[0];
     }
     async makePaid(account, obj)
     {
       try{
       const document = await this.getDoc(obj.order);
+
       const  specifications = await (new CPRPBookRecords).findByDoc(document.uuid);
       const contacts = await (new CPRPDocumentContacts).listData(document.uuid);
       const spec = specifications.map((src)=>
@@ -352,22 +358,24 @@ export default class CPRPOperations extends CPRPQuery
              asset: src.asset_data.uuid,
              asset_resource: src.asset_resource_data.uuid,
              price: src.price,
-             currency: src.currency,
+             currency: src.currency_data.uuid,
              quantity: src.quantity,
              source_record: src.uuid,
-             issue_record: src.issue_record,
+             issue_record: src.issue_record_data.uuid,
              control_record: src.reg_specification_data.uuid,
              isBreak: true, //рассыпать по штучно, чтоб у каждого был свой регистрационныйй номер
+             isMove: true,
 
 //             issue: rec.reg_specification_data.uuid,
          }
 
       });
-       return this.returnData(await (new CPRPDocuments).create(account,
+      console.log('contacts', contacts);
+       const doc =  await (new CPRPDocuments).create(account,
                                                TypeDocuments.paid, 
                                                DocumentsStates.paid.completed,
                                                undefined, //market
-                                               obj.currency,
+                                               document.currency_data.uuid,
                                                {subject: document.subject_data.uuid,
                                                 subject_specification: (document.subject_specification !== undefined && document.subject_specification !== null)?document.subject_specification_data.uuid:undefined,
                                                 from_subject: document.from_subject_data.uuid,
@@ -377,9 +385,10 @@ export default class CPRPOperations extends CPRPQuery
                                                },
                                                spec,
                                                contacts
-                                              ));
-
+                                              );
+          return doc;
         }catch(err) {
+            console.log('error', err.message);
             return {ok:false, error:err.message, data: null};
       }
       

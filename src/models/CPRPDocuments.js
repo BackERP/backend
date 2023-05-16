@@ -36,6 +36,24 @@ export default class CPRPDocuments extends CPRPQuery
                         );
 
     }
+    async getNew(uuid)
+    {
+      return this.request(PRPDocuments                                          
+                         ,CPRPQueryLib.documents.new_items()
+                         ,{uuid: uuid}
+                        );
+
+    }
+    async getNewData(uuid)
+    {
+      return this.requestData(PRPDocuments                                          
+                         ,CPRPQueryLib.documents.new_items()
+                         ,{uuid: uuid}
+                        );
+
+    }
+
+
     async getData(uuid)
     {
       return this.requestData(PRPDocuments
@@ -132,7 +150,8 @@ export default class CPRPDocuments extends CPRPQuery
       try{
             const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
               if(subjects.to_subject_data !== undefined)
-                 subjects.to_subject = await (new PRPSubjects).getOrCreateTrn(t, account, from_subject, to_subject_data);
+                 subjects.to_subject = await (new CPRPSubjects).getOrCreateTrn(t, account, subjects.from_subject, subjects.to_subject_data);
+
                  const documentObject = {
                        number: uuid(),
                        type: type,
@@ -148,21 +167,22 @@ export default class CPRPDocuments extends CPRPQuery
                        documentState:documentState,
                  }
 
-
               const objDoc = await this.createTrn(t, account, documentObject);
               if(market !== undefined)
                  await (new CPRPMarketOffers).setOfferTrn(t, account, market, objDoc.uuid, spec[0].asset);
 
-              if(contacts)          
+              if(subjects.to_subject_data !== undefined)          
                 await (new CPRPDocumentContacts).addToDocTrn(t, account, 
                                                                 objDoc.uuid, 
                                                                 subjects.to_subject, 
                                                                 subjects.to_subject_specification, 
-                                                                [{type:TypeContacts.Email, contact:to_subject_data.email},
-                                                                 {type:TypeContacts.Phone, contact:to_subject_data.phone},
+                                                                [{type:TypeContacts.Email, contact:subjects.to_subject_data.email},
+                                                                 {type:TypeContacts.Phone, contact:subjects.to_subject_data.phone},
                                                                 ]
                                                              );
 
+              if(contacts)          
+                await (new CPRPDocumentContacts).copyToDocTrn(t, account, objDoc.uuid, contacts);
 
               const objSpecs = await (new CPRPDocumentSpecifications).createBySpecTrn(t, 
                                                                                       type,
@@ -177,6 +197,7 @@ export default class CPRPDocuments extends CPRPQuery
            return {ok:true, data: {uuid: data.uuid}}
         }
         catch(err) {
+            console.log(err.message);
             return {ok:false, error:err.message, data: null};
       }
 

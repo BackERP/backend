@@ -31,7 +31,7 @@ export default class CPRPAccountSubjectsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes

@@ -11,6 +11,17 @@ const PRPCurrencies = require('../db').PRPCurrencies;
 
 export default class CPRPDocumentsQueries
 {
+   static new_items()
+   {
+      return {
+               attributes: ['uuid', 'number', 'dateDoc', 'sum', 'external_number'],
+                order: [
+                         ['createdAt', 'DESC'],
+                       ], 
+                raw: true,
+                nest: true,
+             }
+   }
    static items()
    {
       return {
@@ -44,7 +55,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -62,7 +73,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -80,7 +91,7 @@ export default class CPRPDocumentsQueries
                                    model: PRPAccounts
                                   ,attributes: ['uuid', 'login']
                                   ,as: 'createAccount_data'
-                                  ,required: true
+                                  ,required: false
                                 }]
                              },
 
@@ -88,7 +99,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                              },
                              {
                                 model: PRPTypeRelations
@@ -110,7 +121,7 @@ export default class CPRPDocumentsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes
@@ -135,7 +146,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -153,7 +164,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -171,7 +182,7 @@ export default class CPRPDocumentsQueries
                                    model: PRPAccounts
                                   ,attributes: ['uuid', 'login']
                                   ,as: 'createAccount_data'
-                                  ,required: true
+                                  ,required: false
                                 }]
                              },
 
@@ -179,7 +190,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                              },
                              {
                                 model: PRPTypeRelations
@@ -200,7 +211,7 @@ export default class CPRPDocumentsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes
@@ -225,7 +236,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -243,7 +254,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -261,7 +272,7 @@ export default class CPRPDocumentsQueries
                                    model: PRPAccounts
                                   ,attributes: ['uuid', 'login']
                                   ,as: 'createAccount_data'
-                                  ,required: true
+                                  ,required: false
                                 }]
                              },
 
@@ -269,7 +280,7 @@ export default class CPRPDocumentsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                              },
                              {
                                 model: PRPTypeRelations
@@ -291,7 +302,7 @@ export default class CPRPDocumentsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes
@@ -305,7 +316,7 @@ export default class CPRPDocumentsQueries
                              model: PRPCurrencies
                             ,attributes: ['uuid', 'name', 'code']
                             ,as: 'currency_data'
-                            ,required: true
+                            ,required: false
                           },
 
                           {     

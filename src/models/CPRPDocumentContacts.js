@@ -46,6 +46,14 @@ export default class CPRPDocumentContacts extends CPRPQuery
                          , {state: State.Active, document: document}
                         );
     }
+    async getByType(document, subject, type)
+    {
+      return this.requestData(PRPDocumentContacts
+                         ,CPRPQueryLib.document_contacts.record_items()
+                         , {state: State.Active, document, subject, type}
+                        );
+    }
+
 
     async addToDocTrn(t, account, document, subject, subject_specification, contacts)
     {
@@ -58,7 +66,21 @@ export default class CPRPDocumentContacts extends CPRPQuery
          });
        });
     }
+    async copyToDocTrn(t, account, document, contacts)
+    {
 
+       return await map(contacts, async (contact)=>{
+         console.log('copyToDocTrn contact', contact);
+         return await this.createTrn(t, account, {document: document,
+                                                 subject:contact.subject_data.uuid,
+                                                 subject_specification:contact.subject_specification_data.uuid,
+                                                 type:contact.type_data.uuid,
+                                                 contact:contact.contact
+         });
+
+       });
+
+    }
     async createTrn(t, account, obj)
     {
        return await PRPDocumentContacts.create({ document: obj.document,

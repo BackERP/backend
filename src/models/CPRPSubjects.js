@@ -134,6 +134,7 @@ export default class CPRPSubjects extends CPRPQuery
     {
        const inner_name = subject_data.fullname +  ' (' + subject_data.email +')';
        const subjects = await this.getDataByInnerName(inner_name);
+
        let client;
 
        if(subjects.length == 0)
@@ -148,11 +149,15 @@ export default class CPRPSubjects extends CPRPQuery
 
 
        if(subjects.length > 0)
-         client = subject[0];
-       await (new CPRPSubjectSpecification).createIsNotExistTrn(t, TypeRelations.Customer, subject, client.uuid);
+         client = subjects[0];
+ 
+
+       await (new CPRPSubjectSpecification).createIsNotExistTrn(t, account, TypeRelations.Customer, subject, client.uuid);
+
        await (new CPRPSubjectContacts).createIsNotExistTrn(t, account, client.uuid, [{type:TypeContacts.Email, contact: subject_data.email},
                                                                                      {type:TypeContacts.Phone, contact: subject_data.phone},
-                                                                                    ]);
-
+                       
+                                                             ]);
+       return client.uuid;
     }
 }

@@ -1,4 +1,8 @@
 import CPRPOperations from '../models/CPRPOperations';
+import CPRPSuccessPay from '../models/mail/CPRPSuccessPay';
+import CPRPCertificates from '../models/CPRPCertificates';
+import CPRPSuccessPayManager from '../models/mail/CPRPSuccessPayManager';
+
 
 module.exports = {
 
@@ -31,12 +35,16 @@ module.exports = {
     res.json(await (new CPRPOperations).freeReserve(req.account, {asset, quantity}));
   },
   async makeOrder(req, res){  // make order
-    const { source, quantity, fullname, email, phone, order_number} = req.body;
-    res.json(await (new CPRPOperations).makeOrder(req.account, { source, quantity, fullname, email, phone, order_number}));
+    const { sources, fullname, email, phone, order_number} = req.body;
+    res.json(await (new CPRPOperations).makeOrder(req.account, { sources, fullname, email, phone, order_number}));
   },
   async makePaid(req, res){  // make paid
-    const { order_number, sum, currency} = req.body;
-    res.json(await (new CPRPOperations).makePaid(req.account, {order_number, sum, currency}));
+    const { order } = req.body;
+    const data = await (new CPRPOperations).makePaid(req.account, {order});
+    const certificate = await (new CPRPCertificates).paid(data.data.uuid, 'joincharible');
+    await (new CPRPSuccessPayManager).send(certificate.data);
+    await (new CPRPSuccessPay).send(certificate.data);
+    res.json(data);
   },
   async makeReturn(req, res){  // make return
     const { source, quantity} = req.body;

@@ -47,7 +47,6 @@ const Op = Sequelize.Op;
        const attributes = result.data;
        
       return records.map((doc)=>{
-//         console.log('doc', doc);
          doc.subject_data.attributes = attributes.filter((attr)=>attr.subject_data.uuid == doc.subject_data.uuid);
          return doc;
       }); 

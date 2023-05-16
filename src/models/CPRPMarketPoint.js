@@ -178,7 +178,6 @@ export default class CPRPMarketPoint extends CPRPQuery
           viewsubject.Lable = subjectmedia.find((a)=>a.name == 'Lable');
 
 
-          //console.log('subjectmedia', subjectmedia);
 
           const data = {
              asset: asset,
@@ -211,7 +210,6 @@ export default class CPRPMarketPoint extends CPRPQuery
                        },
 
           }
-//          console.log(data);
           t.push(data);
           return t;
        }, []);

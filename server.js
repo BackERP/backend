@@ -62,6 +62,9 @@ const helperRouter = require('./src/routes/helper');
 const operationsRouter = require('./src/routes/operations');
 const assetMarketRouter = require('./src/routes/assetmarket');
 const marketPointRouter = require('./src/routes/marketpoint');
+const certificatesRouter = require('./src/routes/certificates');
+const testMailRouter = require('./src/routes/testmail');
+
 
 
 
@@ -202,6 +205,15 @@ app.use('/'+ api_version + '/api/operations', operationsRouter); // Операц
 app.use('/'+ api_version + '/api/assetmarket', assetMarketRouter); // Маркет актива
 
 app.use('/'+ api_version + '/api/marketpoint/:marketplace', marketPointRouter); // конечная точка маркетинга
+app.use('/'+ api_version + '/api/certificates/:marketplace', certificatesRouter); // конечная точка маркетинга
+app.use('/'+ api_version + '/api/testmail', testMailRouter); // Тестирование почты
+
+
+
+
+
+
+
 
 
 

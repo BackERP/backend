@@ -64,12 +64,14 @@ export default class CPRPQuery
       return resultRecords;
 
   }
-  async request(obj, query,  where, onSuccess = null, data = null) 
+  async request(obj, query,  where, onSuccess = null, data = null, t = undefined) 
   {                                                                         
      query.where = where;
      try
      {
 
+       if(t !== undefined)
+         query.transaction = t;
        let records = await obj.findAll(query);
        if(onSuccess !== null)
          records = await onSuccess(records, data);
@@ -88,6 +90,14 @@ export default class CPRPQuery
         return [];
      return request.data;
   }
+  async requestDataTrn(t, obj, query,  where, onSuccess = null, data = null) 
+  {
+     const request = await this.request(obj, query,  where, onSuccess, data, t);
+     if(!request.ok)
+        return [];
+     return request.data;
+  }
+
   returnData(data)
   {
      return {ok:true, error: '', data:data};

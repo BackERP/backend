@@ -1,0 +1,46 @@
+<p>
+  <img src='https://test.tokendobra.ru/images/charible_logo.svg'/>
+</p>
+<h3>{{holder.name}}, thank you for your donation!</h3>
+<p>
+You donated {{donation.sum}} USD to {{donation.organization}}. As a reward, we are giving you a digital copy of the artwork {{donation.title}} by {{donation.author}}.
+</p>
+<p>
+In this email you will find:
+  <ul>
+    <li>eternal link to a digital copy of the painting</li>
+    <li>pre-NFT of the digital copy of the painting</li>
+  </ul>
+</p>
+<p>
+  All digital artworks are located in decentralized storage (IPFS). It allows you to keep access to your copy even if our project ceases to exist. <a href='{{donation.permanent_link}}'>Link</a> to your copy of the artwork.
+</p>
+<p>
+  Pre-NFT is a voucher that allows you to receive an artwork’s NFT token at any time if you have a crypto wallet. The voucher has been registered to the e-mail address: {{holder.email}}. To receive an NFT token, send your voucher number to <a href='mailto:nft@joincharible.com'>nft@joincharible.com</a>. The e-mail must be sent from the e-mail address used for voucher registration.
+</p>
+<p>
+  <table>
+    <thead>
+      <th>Artwork</th>
+      <th>Artist</th>
+      <th>Non-profit organization</th>
+      <th>Your pre-NFT</th>
+    </thead>
+    <tbody>
+       {% for item in certificates %}
+          <tr>
+             <td>{{item.viewasset.name}}</td>
+             <td>{{item.viewperson.fullname}}</td>
+             <td>{{item.viewsubject.name}}</td>
+             <td>{{item.certificate}}</td>
+          </tr>
+       {% endfor %}
+
+    </tbody>
+
+  </table>
+</p>
+<p>
+  If you have any questions, please feel free to contact us at <a href="mailto:hello@joincharible.com">hello@joincharible.com</a>
+</p>
+

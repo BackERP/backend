@@ -112,9 +112,9 @@ export default class CPRPBookRecords extends CPRPQuery
                         );
     }
 
-    async findByRegSpecRecord(uuid)
+    async findByRegSpecRecord(uuid, t)
     {
-      return this.requestData(PRPBookRecords
+      return this.requestDataTrn(t, PRPBookRecords
                          ,CPRPQueryLib.book_records.items()
                          ,{ state: State.Active,
                              reg_specification: {
@@ -126,6 +126,35 @@ export default class CPRPBookRecords extends CPRPQuery
                           }
                         );
     }
+    async findUUIDSByRegSpecRecord(uuid, t)
+    {
+      return this.requestDataTrn(t, PRPBookRecords
+                         ,CPRPQueryLib.book_records.uuid_items()
+                         ,{ state: State.Active,
+                             reg_specification: {
+                                     [Op.in]: Sequelize.literal("(select reg_specification from PRPBookRecords where uuid='"+ uuid + "')")//: {[Op.like]: '%A%'}
+                                   },
+                             next_record: {
+                               [Op.is]: null
+                             },
+                          }
+                        );
+    }
+
+    async findAllUUIDSByRegSpecRecord(uuid, t)
+    {
+      return this.requestDataTrn(t,PRPBookRecords
+                         ,CPRPQueryLib.book_records.uuid_items()
+                         ,{ state: State.Active,
+                             reg_specification: {
+                                     [Op.in]: Sequelize.literal("(select reg_specification from PRPBookRecords where uuid='"+ uuid + "')")//: {[Op.like]: '%A%'}
+                                   },
+                          }
+                        );
+    }
+
+
+
 
 
 
@@ -137,9 +166,9 @@ export default class CPRPBookRecords extends CPRPQuery
                         );
 
     }
-    async getData(uuid)
+    async getData(uuid, t)
     {
-      return this.requestData(PRPBookRecords
+      return this.requestDataTrn(t, PRPBookRecords
                          ,CPRPQueryLib.book_records.items()
                          ,{uuid: uuid}
                         );
@@ -164,7 +193,7 @@ export default class CPRPBookRecords extends CPRPQuery
                                              subject: obj.subject,
                                              subject_specification: obj.subject_specification,
                                              pre_record: obj.pre_record,
-                                             next_record: obj.next_record,
+//                                             next_record: obj.next_record,
                                              asset: obj.asset,
                                              asset_resource: obj.asset_resource,
                                              asset_metadata_resource: obj.asset_metadata_resource,
@@ -194,19 +223,19 @@ export default class CPRPBookRecords extends CPRPQuery
        return await PRPBookRecords.update({ next_record: next_record,
                                             updatedAt: new Date()
                                            }, 
-                                           {where: {uuid: uuid}},
-                                           { transaction: t });
+                                           {where: {uuid: uuid},
+                                           transaction: t });
     }
 
-    async moveTrn(t, uuid, base_record, quantity)
+    async moveTrn(t, account, uuid, base_record, quantity)
     {
-      const records = await this.getData(uuid);
+      const records = await this.getData(uuid, t);
       if(records.length == 0)
          throw new Error('Incorrect entry in the book');
-      const record = resords[0];
-      if(record.quantity < quantity)
+      const record = records[0];
+      if(Number(record.quantity) < Number(quantity))
          throw new Error('Quantity more than available');
-      const quant = record.quantity - quantity;
+      const quant = Number(record.quantity) - Number(quantity);
       const new_record = await this.createTrn(t, account, { book: this.getUUID(record.book_data),
                                                             reg_number: record.reg_number,
                                                             dateReg: record.dateReg,
@@ -230,18 +259,19 @@ export default class CPRPBookRecords extends CPRPQuery
                                                             control_record: this.getUUID(record.control_record_data),
                         });
       await this.updateNextTrn(t, record.uuid, new_record.uuid);
+     
       return new_record;
 
 
     }
 
-    async moveBackTrn(t, uuid, base_record, quantity)
+    async moveBackTrn(t, account, uuid, base_record, quantity)
     {
-      const records = await this.findByRegSpecRecord(uuid);
+      const records = await this.findByRegSpecRecord(uuid, t);
       if(records.length == 0)
          throw new Error('Incorrect entry in the book');
       const record = resords[0];
-      const quant = record.quantity + quantity;
+      const quant = Number(record.quantity) + Number(quantity);
       const new_record = await this.createTrn(t, account, { book: this.getUUID(record.book_data),
                                                             reg_number: record.reg_number,
                                                             dateReg: record.dateReg,
@@ -274,14 +304,14 @@ export default class CPRPBookRecords extends CPRPQuery
     {
        if(obj.source_record != undefined)
        {
-          const sources = await this.findByRegSpecRecord(obj.source_record);
+          const sources = await this.findUUIDSByRegSpecRecord(obj.source_record, t);
           if(sources.length == 0)
             throw new Error('Unknown source record');
           obj.source_record = sources[0].uuid;
        }
        if(obj.master_record != undefined)
        {
-          const masters = await this.findByRegSpecRecord(obj.master_record);
+          const masters = await this.findUUIDSByRegSpecRecord(obj.master_record, t);
           if(masters.length == 0)
             throw new Error('Unknown issue record');
           obj.master_record = masters[0].uuid;
@@ -289,11 +319,11 @@ export default class CPRPBookRecords extends CPRPQuery
 
        const record = await this.createTrn(t, account, obj);
        if(obj.source_record != undefined)
-         await this.moveTrn(t, obj.source_record, record.uuid, obj.quantity);
+         await this.moveTrn(t, account, obj.source_record, record.uuid, obj.quantity);
        if(obj.master_record != undefined)
-         await this.moveTrn(t, obj.master_record, record.uuid, obj.quantity);
+         await this.moveTrn(t, account, obj.master_record, record.uuid, obj.quantity);
        if(obj.move_to_record !== undefined)
-         await this.moveBackTrn(t, obj.move_to_record, record.uuid, obj.quantity);
+         await this.moveBackTrn(t, account, obj.move_to_record, record.uuid, obj.quantity);
 
 
     }
@@ -302,7 +332,7 @@ export default class CPRPBookRecords extends CPRPQuery
     {
        if(!isBreak)
           return await this.moveItemSpecTrn(t, account, obj);
-       const q = obj.quantity;
+       const q = Number(obj.quantity);
        for(let i = 0; i < q; i++)
        {
          obj.sum = obj.price;
@@ -328,24 +358,28 @@ export default class CPRPBookRecords extends CPRPQuery
            master_records = await this.findByRegSpec([spec.issue_record]);
 
 
+
        let control_records = [];
        if(spec.control_record !== undefined)
           control_records = await this.findByRegSpec([spec.control_record]);
 
 
 
-           const master_record = master_records.find((r)=>r.reg_specification == spec.issue_record);
-           const control_record = control_records.find((r)=>r.reg_specification == spec.control_record);
+           const master_record = master_records.find((r)=>r.reg_specification_data.uuid == spec.issue_record);
+           const control_record = control_records.find((r)=>r.reg_specification_data.uuid == spec.control_record);
            let master_record_uuid;
 
            if(master_record !== undefined)
            {
+             if(spec.isMove !== undefined && spec.isMove)
+                master_record_uuid = master_record.uuid;
 
-             master_record_uuid = master_record.uuid;
-             if(master_record.quantity < spec.quantity)
+             if(Number(master_record.quantity) < Number(spec.quantity))
                 throw new Error('Quantity more than available in issue');
-             if(control_record !== undefined && control_record.quantity < spec.quantity)
-                throw new Error('Quantity more than available in source document');
+             //Ордер пытается поверить количество на оффере, а оно там 1, всегда и не двигается, нужно как-то это абстрактно обработать
+             if(spec.isMove !== undefined && spec.isMove)
+               if(control_record !== undefined && Number(control_record.quantity) < Number(spec.quantity))
+                  throw new Error('Quantity more than available in source document');
 
            }
 
@@ -380,11 +414,11 @@ export default class CPRPBookRecords extends CPRPQuery
     {
       try{
            const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-             let q = quantity;
+             let q = Number(quantity);
              return await map(sources, async (record)=>{
                 if(q == 0)
                   return;
-                let qant = record.quantity;
+                let qant = Number(record.quantity);
                 if(qant > q)
                   qant = q;
                 q -= qant;
@@ -403,7 +437,7 @@ export default class CPRPBookRecords extends CPRPQuery
                                                                       currency: this.getUUID(record.currency_data),
                                                                       source_record: record.uuid,
                            });
-                   return await this.moveTrn(t, record.uuid, new_record.uuid, quant);
+                   return await this.moveTrn(t, account, record.uuid, new_record.uuid, quant);
              });
            });
            return {ok:true, data}
@@ -417,16 +451,16 @@ export default class CPRPBookRecords extends CPRPQuery
     {
       try{
            const data = await sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE}, async (t) => {
-             let q = quantity;
+             let q = Number(quantity);
              return await map(sources, async (record)=>{
                 if(q == 0)
                   return;
-                let qant = record.quantity;
+                let qant = Number(record.quantity);
                 if(qant > q)
                   qant = q;
                 q -= qant;
-                const new_record = await this.moveTrn(t, record.uuid, undefined, quant);
-                return await this.moveBackTrn(t, record.source_record_data.uuid, new_record.uuid, qant);
+                const new_record = await this.moveTrn(t, account, record.uuid, undefined, quant);
+                return await this.moveBackTrn(t, account, record.source_record_data.uuid, new_record.uuid, qant);
              });
 
            });

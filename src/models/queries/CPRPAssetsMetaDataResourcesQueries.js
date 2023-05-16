@@ -61,7 +61,7 @@ export default class CPRPAssetsMetaDataResourcesQueries
                                               model: PRPAccounts
                                              ,attributes: ['uuid', 'login']
                                              ,as: 'createAccount_data'
-                                             ,required: true
+                                             ,required: false
                                            },
                                            {
                                              model: PRPSubjectTypes
@@ -79,7 +79,7 @@ export default class CPRPAssetsMetaDataResourcesQueries
                                               model: PRPAccounts
                                               ,attributes: ['uuid', 'login']
                                               ,as: 'createAccount_data'
-                                              ,required: true
+                                              ,required: false
                                            },
                                            {
                                               model: PRPSubjectTypes
@@ -97,14 +97,14 @@ export default class CPRPAssetsMetaDataResourcesQueries
                                                          model: PRPAccounts
                                                         ,attributes: ['uuid', 'login']
                                                         ,as: 'createAccount_data'
-                                                        ,required: true
+                                                        ,required: false
                                              }]
                                           },
                                           {
                                             model: PRPAccounts
                                            ,attributes: ['uuid', 'login']
                                            ,as: 'createAccount_data'
-                                           ,required: true
+                                           ,required: false
                                           },
                                           {
                                             model: PRPTypeRelations
@@ -123,7 +123,7 @@ export default class CPRPAssetsMetaDataResourcesQueries
                                   model: PRPAccounts
                                  ,attributes: ['uuid', 'login']
                                  ,as: 'createAccount_data'
-                                 ,required: true
+                                 ,required: false
                                },
                                {
                                   model: PRPSubjectTypes

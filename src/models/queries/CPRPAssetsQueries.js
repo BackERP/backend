@@ -41,7 +41,7 @@ export default class CPRPAssetsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -59,7 +59,7 @@ export default class CPRPAssetsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -77,7 +77,7 @@ export default class CPRPAssetsQueries
                                    model: PRPAccounts
                                   ,attributes: ['uuid', 'login']
                                   ,as: 'createAccount_data'
-                                  ,required: true
+                                  ,required: false
                                 }]
                              },
 
@@ -85,7 +85,7 @@ export default class CPRPAssetsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                              },
                              {
                                 model: PRPTypeRelations
@@ -106,7 +106,7 @@ export default class CPRPAssetsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes

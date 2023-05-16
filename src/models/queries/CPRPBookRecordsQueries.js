@@ -21,6 +21,18 @@ const PRPSubjectTypes = require('../db').PRPSubjectTypes;
 
 export default class CPRPBookRecordsQueries
 {
+   static uuid_items()
+   {
+      return {
+               attributes: ['uuid', 'next_record'],
+                order: [
+                         ['createdAt', 'DESC'],
+                       ], 
+                raw: true,
+                nest: true,
+              }
+   }
+
    static items()
    {
       return {
@@ -52,7 +64,7 @@ export default class CPRPBookRecordsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -70,7 +82,7 @@ export default class CPRPBookRecordsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                               },
                               {
                                  model: PRPSubjectTypes
@@ -88,7 +100,7 @@ export default class CPRPBookRecordsQueries
                                    model: PRPAccounts
                                   ,attributes: ['uuid', 'login']
                                   ,as: 'createAccount_data'
-                                  ,required: true
+                                  ,required: false
                                 }]
                              },
 
@@ -96,7 +108,7 @@ export default class CPRPBookRecordsQueries
                                  model: PRPAccounts
                                 ,attributes: ['uuid', 'login']
                                 ,as: 'createAccount_data'
-                                ,required: true
+                                ,required: false
                              },
                              {
                                 model: PRPTypeRelations
@@ -117,7 +129,7 @@ export default class CPRPBookRecordsQueries
                                model: PRPAccounts
                               ,attributes: ['uuid', 'login']
                               ,as: 'createAccount_data'
-                              ,required: true
+                              ,required: false
                             },
                             {
                                model: PRPSubjectTypes
@@ -180,7 +192,7 @@ export default class CPRPBookRecordsQueries
                                                model: PRPAccounts
                                               ,attributes: ['uuid', 'login']
                                               ,as: 'createAccount_data'
-                                              ,required: true
+                                              ,required: false
                                             },
                                             {
                                                model: PRPSubjectTypes
@@ -198,7 +210,7 @@ export default class CPRPBookRecordsQueries
                                               model: PRPAccounts
                                              ,attributes: ['uuid', 'login']
                                              ,as: 'createAccount_data'
-                                             ,required: true
+                                             ,required: false
                                            },
                                            {
                                                model: PRPSubjectTypes
@@ -216,14 +228,14 @@ export default class CPRPBookRecordsQueries
                                                          model: PRPAccounts
                                                         ,attributes: ['uuid', 'login']
                                                         ,as: 'createAccount_data'
-                                                        ,required: true
+                                                        ,required: false
                                              }]
                                           },
                                           {
                                             model: PRPAccounts
                                            ,attributes: ['uuid', 'login']
                                            ,as: 'createAccount_data'
-                                           ,required: true
+                                           ,required: false
                                           },
                                           {
                                             model: PRPTypeRelations
@@ -242,7 +254,7 @@ export default class CPRPBookRecordsQueries
                                   model: PRPAccounts
                                  ,attributes: ['uuid', 'login']
                                  ,as: 'createAccount_data'
-                                 ,required: true
+                                 ,required: false
                                },
                                {
                                   model: PRPSubjectTypes
