@@ -1,20 +1,24 @@
 import CPRPSendMail from './CPRPSendMail';
-const nunjucks = require('nunjucks');
+import CPRPTmplMail from './CPRPTmplMail';
 
 
-export default class CPRPSuccessPay
+export default class CPRPSuccessPay extends CPRPTmplMail
 {
-   getTemplate(data)
+   getTemplate(nunjucks, data)
    {
       let template = 'successPay.html';
       if(data.isOriginal)
         template = 'successPayOriginal.html';
       return nunjucks.render(template, { holder: data.holder,  certificates: data.certificates, donation: data.donation});
    }
-   async send(data)
+   getTile(data, marketplace)
    {
-      nunjucks.configure('./src/views/mail/en', { autoescape: true });
-      const html = this.getTemplate(data);
-      return await (new CPRPSendMail).send(data.holder.email, data.holder.name + ', Charible is grateful for your donation', html);
+      if(marketplace == 'joincharible')
+        return data.holder.name + ', Charible is grateful for your donation';
+      return data.holder.name + ', ТокенДобра благодарит вас за пожертвование!';
+   }
+   async send(data, marketplace)
+   {
+     return await this.sendData(data, marketplace, data.holder.email, this.getTile(data, marketplace));
    }                                                                                 
 }

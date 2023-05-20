@@ -1,19 +1,26 @@
 
 var nodemailer = require('nodemailer');
-import {MAIL_PORT, MAIL_HOST, MAIL_USER, MAIL_PASSWORD}  from '../../config/config';
+import {MAIL_PORT, MAIL_HOST, MAIL_USER, MAIL_PASSWORD, MAIL_USER_RU, MAIL_PASSWORD_RU}  from '../../config/config';
 
 
 
 export default class CPRPSendMail
 {
-
-   constructor()
+   constructor(marketplace)
    {
+     this.mail_user = MAIL_USER_RU;
+     let mail_password = MAIL_PASSWORD_RU;
+     if(marketplace == 'joincharible')
+     {
+       this.mail_user = MAIL_USER;
+       mail_password = MAIL_PASSWORD;
+     }
+
      this.transporter = nodemailer.createTransport({ port: MAIL_PORT,               // true for 465, false for other ports
                                                      host: MAIL_HOST,
                                                      auth: {
-                                                             user: MAIL_USER,
-                                                             pass: MAIL_PASSWORD,
+                                                             user: this.mail_user,
+                                                             pass: mail_password,
                                                       },
                                                       secure: true,
                                                    });
@@ -36,7 +43,7 @@ export default class CPRPSendMail
    }
    async send(to, subject, html)
    {
-      return await this.wrapedSendMail({from: MAIL_USER,  // sender address
+      return await this.wrapedSendMail({from: this.mail_user,  // sender address
                                          to,   // list of receivers
                                          subject,
                                          html,

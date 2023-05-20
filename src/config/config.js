@@ -13,8 +13,9 @@ const MAIL_HOST=process.env.MAIL_HOST
 const MAIL_USER=process.env.MAIL_USER
 const MAIL_PASSWORD=process.env.MAIL_PASSWORD
 const MAIL_MANAGER = process.env.MAIL_MANAGER
+const MAIL_USER_RU=process.env.MAIL_USER_RU
+const MAIL_PASSWORD_RU=process.env.MAIL_PASSWORD_RU
 
-                                                                                                         
 
 export {accessTokenSecret, 
         refreshTokenSecret, 
@@ -28,5 +29,8 @@ export {accessTokenSecret,
         MAIL_HOST,
         MAIL_USER,
         MAIL_PASSWORD,
-        MAIL_MANAGER
+        MAIL_MANAGER,
+        MAIL_USER_RU,
+        MAIL_PASSWORD_RU,
+
       };

@@ -8,9 +8,10 @@ import CPRPSuccessPayManager from '../models/mail/CPRPSuccessPayManager';
 module.exports = {
   async send(req, res){ //get one 
 
-     const  data = await (new CPRPCertificates).paid('12fc1f79-7459-4711-aa46-06821f68caa4', 'joincharible')
-     await (new CPRPSuccessPayManager).send(data.data);
-     res.json(await (new CPRPSuccessPay).send(data.data));
+     const marketplace =  'tokendobra';
+     const  data = await (new CPRPCertificates).paid('e03eef44-6e8f-4214-8aa4-6d68a1cf0ac7', marketplace);
+     await (new CPRPSuccessPayManager).send(data.data, marketplace);
+     res.json(await (new CPRPSuccessPay).send(data.data, marketplace));
   },
 }
 

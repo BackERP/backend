@@ -39,11 +39,11 @@ module.exports = {
     res.json(await (new CPRPOperations).makeOrder(req.account, { sources, fullname, email, phone, order_number}));
   },
   async makePaid(req, res){  // make paid
-    const { order } = req.body;
+    const { order, marketplace } = req.body;
     const data = await (new CPRPOperations).makePaid(req.account, {order});
-    const certificate = await (new CPRPCertificates).paid(data.data.uuid, 'joincharible');
-    await (new CPRPSuccessPayManager).send(certificate.data);
-    await (new CPRPSuccessPay).send(certificate.data);
+    const certificate = await (new CPRPCertificates).paid(data.data.uuid, marketplace);
+    await (new CPRPSuccessPayManager).send(certificate.data, marketplace);
+    await (new CPRPSuccessPay).send(certificate.data, marketplace);
     res.json(data);
   },
   async makeReturn(req, res){  // make return
