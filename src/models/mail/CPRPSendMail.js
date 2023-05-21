@@ -41,12 +41,13 @@ export default class CPRPSendMail
          }
        )
    }
-   async send(to, subject, html)
+   async send(to, subject, html, attachments)
    {
       return await this.wrapedSendMail({from: this.mail_user,  // sender address
                                          to,   // list of receivers
                                          subject,
                                          html,
+                                         attachments
                                        });
    }
 
