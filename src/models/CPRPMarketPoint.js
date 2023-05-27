@@ -176,6 +176,12 @@ export default class CPRPMarketPoint extends CPRPQuery
                                                                 return t;
                                                       }, []);
           viewsubject.Lable = subjectmedia.find((a)=>a.name == 'Lable');
+          viewsubject.Background = subjectmedia.find((a)=>a.name == 'Background at Organization page');
+          if(viewsubject.Background == undefined)
+            viewsubject.Background = {name: 'Background at Organization page',
+                                      link: 'https://github.com/jamb17/token-dobra/blob/main/phound%20bg.png?raw=true'
+                                     }
+
 
 
 
