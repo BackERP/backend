@@ -8,10 +8,8 @@ export default class CPRPSuccessPayManager  extends CPRPTmplMail
 {
    getTemplate(nunjucks, data)
    {
-      let template = 'successPay.html';
-      if(data.isOriginal)
-        template = 'successPayOriginal.html';
-      return nunjucks.render(template, { holder: data.holder,  certificates: data.certificates, donation: data.donation, resource: this.getResource()});
+      let template = 'successPayManager.html';
+      return nunjucks.render(template, { holder: data.holder,  certificates: data.certificates, donation: data.donation, resource: this.getResource(), isOriginal:data.isOriginal});
    }
    getTile(data, marketplace)
    {

@@ -150,17 +150,21 @@ export default class CPRPCertificates extends CPRPQuery
         const document = documents[0];
         const subject = document.to_subject_data.name;
         const contacts = await (new CPRPDocumentContacts).getByType(uuid, document.to_subject_data.uuid, TypeContacts.Email);
-        console.log('contacts', contacts);
         let email;
         if(contacts.length > 0)
           email = contacts[0].contact;
+        const phoneContacts = await (new CPRPDocumentContacts).getByType(uuid, document.to_subject_data.uuid, TypeContacts.Phone);
+        let phone;
+        if(phoneContacts.length > 0)
+          phone = phoneContacts[0].contact;
+
         const records = await (new CPRPBookRecords).findByDoc(uuid);
         const certificates = await this.makeViewRecords(market, records);
 
 
         return this.returnData({ uuid,
                                  isOriginal:certificates[0].isOriginal,
-                                 holder:{name: subject, email},
+                                 holder:{name: subject, email, phone},
                                  certificates,
                                  donation: {sum:document.sum, organization: certificates[0].viewsubject.name, title: certificates[0].viewasset.name, author: certificates[0].viewperson.fullname, permanent_link: certificates[0].permanent_link}
                                 });
