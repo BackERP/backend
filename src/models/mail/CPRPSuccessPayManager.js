@@ -21,6 +21,6 @@ export default class CPRPSuccessPayManager  extends CPRPTmplMail
    }
    async send(data, marketplace)
    {
-     return await this.sendData(data, marketplace, data.holder.email, this.getTile(data, marketplace));
+     return await this.sendData(data, marketplace, MAIL_MANAGER, this.getTile(data, marketplace));
    }                                                                                 
 }
